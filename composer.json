@@ -1,0 +1,26 @@
+{
+    "name": "portedcheese/admin-site-menu",
+    "description": "Interface for site administrators for edit site menu",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vladimir Peshkov",
+            "email": "vladimirpeshkov5@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "PortedCheese\\AdminSiteMenu\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "PortedCheese\\AdminSiteMenu\\AdminSiteMenuServiceProvider"
+            ]
+        }
+    }
+}
