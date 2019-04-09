@@ -180,9 +180,15 @@ class MenuItem extends Model
     {
         $method = $this->method;
         $children = [];
-        if (method_exists($this, $method)) {
+        if (class_exists('\App\MenuItem')) {
+            $class = new \App\MenuItem();
+        }
+        else {
+            $class = $this;
+        }
+        if (method_exists($class, $method)) {
             $children = [];
-            $array = $this->{$method}();
+            $array = $class->{$method}();
             foreach ($array as $key => $item) {
                 // Два поля обязательны.
                 if (empty($item['title']) || empty($item['url'])) {
