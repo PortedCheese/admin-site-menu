@@ -3,10 +3,6 @@
 @section('page-title', 'Меню - ')
 @section('header-title', 'Список меню сайта')
 
-@section('more-scripts')
-    <script src="{{ asset('vendor/admin-site-menu/menu.js') }}" defer></script>
-@endsection
-
 @section('admin')
     @role('admin')
         @include('admin-site-menu::admin.menu.create-form')

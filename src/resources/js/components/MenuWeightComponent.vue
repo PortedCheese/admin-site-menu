@@ -53,9 +53,6 @@
                 }).then(response => {
                     this.loading = false;
                     let result = response.data;
-                    if (result.success) {
-                        this.weight = result.weight;
-                    }
                 }, response => {
                     this.loading = false;
                 })

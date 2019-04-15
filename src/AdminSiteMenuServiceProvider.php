@@ -19,7 +19,7 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
         ]);
         // Assets.
         $this->publishes([
-            __DIR__ . '/public/js' => public_path('vendor/admin-site-menu'),
+            __DIR__ . '/resources/js/components' => resource_path('js/components/vendor/admin-site-menu'),
         ], 'public');
     }
 
