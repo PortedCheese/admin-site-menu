@@ -3,6 +3,7 @@
 namespace PortedCheese\AdminSiteMenu\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Menu extends Model
 {
@@ -49,6 +50,10 @@ class Menu extends Model
      */
     public static function getByKey($key)
     {
+        $cached = Cache::get("menu:$key");
+        if (!empty($cached)) {
+            return $cached;
+        }
         try {
             $menu = Menu::where('key', $key)->firstOrFail();
         } catch (\Exception $e) {
@@ -61,6 +66,7 @@ class Menu extends Model
         foreach ($menuItems as $menuItem) {
             $output[] = $menuItem->prepareForRender();
         }
+        Cache::forever("menu:$key", $output);
         return $output;
     }
 

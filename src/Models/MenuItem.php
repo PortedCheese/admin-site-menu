@@ -3,6 +3,7 @@
 namespace PortedCheese\AdminSiteMenu\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 class MenuItem extends Model
@@ -27,6 +28,13 @@ class MenuItem extends Model
         static::deleting(function ($item) {
             // Удаляем подпункты меню.
             $item->clearItems();
+            $item->forgetCache();
+        });
+        static::created(function ($item) {
+            $item->forgetCache();
+        });
+        static::updated(function ($item) {
+            $item->forgetCache();
         });
     }
 
@@ -206,16 +214,18 @@ class MenuItem extends Model
         return $children;
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | Функции вывода меню
-    |--------------------------------------------------------------------------
-    |
-    | Сюда можно дописать функции, которые будут возвращать элементы меню.
-    | У каждого элемента должно быть: title, url.
-    | Надо вернуть массив, он потом преобразуется в объект.
-    |
+    /**
+     * Очистить кэш меню.
      */
+    private function forgetCache()
+    {
+        $menu = $this->menu;
+        if (empty($menu)) {
+            return;
+        }
+        $key = $menu->key;
+        Cache::forget("menu:$key");
+    }
 
 
 }
