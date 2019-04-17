@@ -12,9 +12,13 @@
 ## Установка
 `composer require portedcheese/admin-site-menu`
 
-Выгружается шаблон для меню и компонент для изменения веса меню
+Выгружается компонент для изменения веса меню
 
 `php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider"`
+
+Создать шаблоны в layouts и модели.
+
+`php artisan make:menu-settings`
 
 Создаем таблицы
 
