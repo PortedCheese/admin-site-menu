@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "1f231154164b2923d34a86a3dfad3794",
+    "packages": [
+        {
+            "name": "portedcheese/base-settings",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PortedCheese/base-settings.git",
+                "reference": "acccf221e484773e9e397b201bf0d202c52c1cf9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PortedCheese/base-settings/zipball/acccf221e484773e9e397b201bf0d202c52c1cf9",
+                "reference": "acccf221e484773e9e397b201bf0d202c52c1cf9",
+                "shasum": ""
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "PortedCheese\\BaseSettings\\BaseSettingsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "PortedCheese\\BaseSettings\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Vladimir Peshkov",
+                    "email": "vladimirpeshkov5@gmail.com"
+                }
+            ],
+            "description": "Templates and settings for start project",
+            "time": "2019-04-17T10:37:50+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "portedcheese/base-settings": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

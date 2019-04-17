@@ -10,7 +10,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "portedcheese/base-settings": "dev-master"
+    },
     "autoload": {
         "psr-4": {
             "PortedCheese\\AdminSiteMenu\\": "src/"
