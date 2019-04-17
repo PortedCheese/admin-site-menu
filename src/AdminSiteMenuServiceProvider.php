@@ -3,6 +3,7 @@
 namespace PortedCheese\AdminSiteMenu;
 
 use Illuminate\Support\ServiceProvider;
+use PortedCheese\AdminSiteMenu\Console\Commands\MenuMakeCommand;
 
 class AdminSiteMenuServiceProvider extends ServiceProvider
 {
@@ -10,17 +11,24 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
     {
         // Подключение миграций.
         $this->loadMigrationsFrom(__DIR__ . '/database/migrations');
+
         // Подключение роутов.
         $this->loadRoutesFrom(__DIR__ . '/routes/admin.php');
+
         // Подключение шаблонов.
         $this->loadViewsFrom(__DIR__ . '/resources/views', 'admin-site-menu');
-        $this->publishes([
-            __DIR__ . '/resources/views/layouts/menu' => resource_path('views/vendor/admin-site-menu'),
-        ]);
+        
         // Assets.
         $this->publishes([
             __DIR__ . '/resources/js/components' => resource_path('js/components/vendor/admin-site-menu'),
         ], 'public');
+
+        // Console.
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MenuMakeCommand::class,
+            ]);
+        }
     }
 
     public function register()

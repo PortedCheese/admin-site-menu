@@ -57,7 +57,7 @@ class Menu extends Model
         try {
             $menu = Menu::where('key', $key)->firstOrFail();
         } catch (\Exception $e) {
-            return FALSE;
+            return [];
         }
         $menuItems = $menu->items
             ->where('parent_id', NULL)
