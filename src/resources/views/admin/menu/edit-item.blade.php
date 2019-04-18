@@ -36,6 +36,10 @@
             </div>
 
             <div class="form-group">
+                @include('admin-site-menu::admin.menu.routes-modal')
+            </div>
+
+            <div class="form-group">
                 <label for="url">URL</label>
                 <input type="text"
                        id="url"
