@@ -54,7 +54,6 @@
                        id="template"
                        name="template"
                        value="{{ old('template') ? old('template') : $menuItem->template }}"
-                       required
                        class="form-control">
             </div>
 

@@ -55,7 +55,6 @@
                            id="template"
                            name="template"
                            value="{{ old('template') }}"
-                           required
                            class="form-control">
                 </div>
 
