@@ -19,6 +19,7 @@ class MenuItem extends Model
         'parent_id',
         'target',
         'method',
+        'template',
     ];
 
     protected static function boot()

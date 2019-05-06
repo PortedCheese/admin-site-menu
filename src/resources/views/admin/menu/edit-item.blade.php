@@ -49,6 +49,16 @@
             </div>
 
             <div class="form-group">
+                <label for="template">Шаблон</label>
+                <input type="text"
+                       id="template"
+                       name="template"
+                       value="{{ old('template') ? old('template') : $menuItem->template }}"
+                       required
+                       class="form-control">
+            </div>
+
+            <div class="form-group">
                 <label for="method">Метод</label>
                 <input type="text"
                        id="method"

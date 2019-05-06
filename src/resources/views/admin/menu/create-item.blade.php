@@ -48,32 +48,44 @@
                        class="form-control">
             </div>
 
-            <div class="form-group">
-                <label for="method">Метод</label>
-                <input type="text"
-                       id="method"
-                       name="method"
-                       value="{{ old('method') }}"
-                       class="form-control">
-            </div>
+            @role('admin')
+                <div class="form-group">
+                    <label for="template">Шаблон</label>
+                    <input type="text"
+                           id="template"
+                           name="template"
+                           value="{{ old('template') }}"
+                           required
+                           class="form-control">
+                </div>
 
-            <div class="form-group">
-                <label for="middleware">Роли</label>
-                <input type="text"
-                       id="middleware"
-                       name="middleware"
-                       value="{{ old('middleware') }}"
-                       class="form-control">
-            </div>
+                <div class="form-group">
+                    <label for="method">Метод</label>
+                    <input type="text"
+                           id="method"
+                           name="method"
+                           value="{{ old('method') }}"
+                           class="form-control">
+                </div>
 
-            <div class="form-group">
-                <label for="class">Класс</label>
-                <input type="text"
-                       id="class"
-                       name="class"
-                       value="{{ old('class') }}"
-                       class="form-control">
-            </div>
+                <div class="form-group">
+                    <label for="middleware">Роли</label>
+                    <input type="text"
+                           id="middleware"
+                           name="middleware"
+                           value="{{ old('middleware') }}"
+                           class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="class">Класс</label>
+                    <input type="text"
+                           id="class"
+                           name="class"
+                           value="{{ old('class') }}"
+                           class="form-control">
+                </div>
+            @endrole
 
             <div class="form-group">
                 <label for="target">Target</label>

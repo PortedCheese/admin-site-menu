@@ -26,6 +26,7 @@ class CreateMenuItemsTable extends Migration
             $table->integer('parent_id')->nullable();
             $table->string('target')->nullable();
             $table->string('method')->nullable();
+            $table->string('template')->nullable();
         });
     }
 

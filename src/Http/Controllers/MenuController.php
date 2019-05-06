@@ -35,7 +35,8 @@ class MenuController extends Controller
     public function store(MenuStoreRequest $request)
     {
         Menu::create($request->all());
-        return redirect()->route('admin.menus.index')
+        return redirect()
+            ->route('admin.menus.index')
             ->with('success', 'Новое меню добавлено');
     }
 
@@ -48,8 +49,14 @@ class MenuController extends Controller
      */
     public function destroy(Menu $menu)
     {
+        if (in_array($menu->key, ['main', 'admin'])) {
+            return redirect()
+                ->back()
+                ->with('error', 'Невозможно удалить это меню');
+        }
         $menu->delete();
-        return redirect()->route('admin.menus.index')
+        return redirect()
+            ->route('admin.menus.index')
             ->with('success', 'Меню удалено');
     }
 

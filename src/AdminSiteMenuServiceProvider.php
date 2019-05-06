@@ -35,12 +35,15 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
             $routes = Route::getRoutes();
             $names = [];
             foreach ($routes->getRoutesByName() as $name => $route) {
-                $uri = $route->uri();
                 if (
-                    (strstr($name, '.') === FALSE) ||
-                    (strstr($name, 'site.') !== FALSE) ||
-                    (strstr($name, '.page.') !== FALSE)
+                    in_array("GET", $route->methods) &&
+                    (
+                        (strstr($name, '.') === FALSE) ||
+                        (strstr($name, 'site.') !== FALSE) ||
+                        (strstr($name, '.page.') !== FALSE)
+                    )
                 ) {
+                    $uri = $route->uri();
                     $names[$name] = $uri;
                 }
             }

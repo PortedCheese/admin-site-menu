@@ -2,8 +2,11 @@
 
 namespace PortedCheese\AdminSiteMenu\Console\Commands;
 
+use App\Menu;
+use App\MenuItem;
 use Illuminate\Console\Command;
 use Illuminate\Console\DetectsApplicationNamespace;
+use Illuminate\Support\Facades\Schema;
 
 class MenuMakeCommand extends Command
 {
@@ -67,8 +70,52 @@ class MenuMakeCommand extends Command
 
         $this->exportViews();
 
-        if (!$this->option('views')) {
+        if (! $this->option('views')) {
             $this->exportModels();
+            $this->makeDefaultMenus();
+        }
+
+
+    }
+
+    /**
+     * Создать стандартные меню.
+     */
+    protected function makeDefaultMenus()
+    {
+        if (!Schema::hasTable('menus')) {
+            $this->info("Table [menus] not found. Please run migrate command");
+            return;
+        }
+
+        try {
+            $menu = Menu::where('key', 'main')->firstOrFail();
+        }
+        catch (\Exception $e) {
+            $menu = Menu::create([
+                'title' => 'Основная навигация',
+                'key' => 'main',
+            ]);
+            MenuItem::create([
+                'title' => 'Главная',
+                'menu_id' => $menu->id,
+                'route' => 'home',
+            ]);
+        }
+
+        try {
+            $menu = Menu::where('key', 'admin')->firstOrFail();
+        }
+        catch (\Exception $e) {
+            $menu = Menu::create([
+                'title' => 'Навигация администратора',
+                'key' => 'admin',
+            ]);
+            MenuItem::create([
+                'title' => 'Меню сайта',
+                'menu_id' => $menu->id,
+                'route' => 'admin.menus.index',
+            ]);
         }
     }
 

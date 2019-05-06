@@ -24,7 +24,7 @@
                     <td>{{ $menu->title }} ({{ $menu->items->count() }})</td>
                     <td>{{ $menu->key }}</td>
                     <td>
-                        @if ($menu->key != 'main')
+                        @if (! in_array($menu->key, ['main', 'admin']))
                             <confirm-delete-model-button model-id="{{ $menu->id }}">
                                 <template slot="other">
                                     @include('admin-site-menu::admin.menu.menu-buttons', [
