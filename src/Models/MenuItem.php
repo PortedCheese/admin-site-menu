@@ -144,6 +144,11 @@ class MenuItem extends Model
         }
         $data['children'] = $children;
         $data['url'] = $this->getUrl();
+        $data['ico'] = false;
+        if (!empty($this->class) && strripos($this->class, '@') === 0) {
+            $data['class'] = false;
+            $data['ico'] = str_replace('@', '', $this->class);
+        }
         return (object) $data;
     }
 

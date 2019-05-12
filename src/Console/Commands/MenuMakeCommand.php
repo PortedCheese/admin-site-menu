@@ -155,6 +155,10 @@ class MenuMakeCommand extends Command
         if (! is_dir($directory = resource_path('views/layouts/menu'))) {
             mkdir($directory, 0755, true);
         }
+
+        if (! is_dir($directory = resource_path('views/admin/menu'))) {
+            mkdir($directory, 0755, true);
+        }
     }
 
     /**

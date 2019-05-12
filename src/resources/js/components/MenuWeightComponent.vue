@@ -1,23 +1,21 @@
 <template>
     <div class="row">
-        <div class="input-group input-group-sm">
-            <div class="input-group-prepend">
-                <button class="btn btn-outline-secondary"
-                        @click="downWeight()"
-                        :disabled="currentWeight < 1 || loading"
-                        type="button">
-                    <i class="fas fa-minus"></i>
-                </button>
-            </div>
-            <input class="form-control disabled-weight" type="text" v-model="currentWeight" disabled>
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary"
-                        @click="upWeight()"
-                        :disabled="loading"
-                        type="button">
-                    <i class="fas fa-plus"></i>
-                </button>
-            </div>
+        <div class="btn-group btn-group-sm text-info">
+            <button class="btn btn-outline-info"
+                    @click="downWeight()"
+                    :disabled="currentWeight < 1 || loading"
+                    type="button">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button class="btn btn-outline-default" disabled="">
+                {{ currentWeight}}
+            </button>
+            <button class="btn btn-outline-info"
+                    @click="upWeight()"
+                    :disabled="loading"
+                    type="button">
+                <i class="fas fa-plus"></i>
+            </button>
         </div>
     </div>
 </template>
@@ -65,8 +63,8 @@
 </script>
 
 <style scoped>
-.disabled-weight {
-    max-width: 40px;
-    text-align: center;
-}
+    .disabled-weight {
+        max-width: 40px;
+        text-align: center;
+    }
 </style>
