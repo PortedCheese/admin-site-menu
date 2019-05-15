@@ -30,7 +30,7 @@
                                     <template slot="other">
                                         @include('admin-site-menu::admin.menu.menu-buttons', [
                                             'menuId' => $menu->id,
-                                            'count' => $menu->items->count()
+                                            'count' => false
                                         ])
                                     </template>
                                     @role('admin')
@@ -49,19 +49,12 @@
                                 <div class="btn-group" role="group">
                                     @include('admin-site-menu::admin.menu.menu-buttons', [
                                         'menuId' => $menu->id,
-                                        'count' => $menu->items->count()
+                                        'count' => false
                                     ])
                                 </div>
                             @endif
                         </td>
                     </tr>
-                    @if ($menu->items->count())
-                        <tr>
-                            <td colspan="4" class="collapse" id="collapse-list-{{ $menu->id }}">
-                                @include('admin-site-menu::admin.menu.items-table')
-                            </td>
-                        </tr>
-                    @endif
                 @endforeach
                 </tbody>
             </table>

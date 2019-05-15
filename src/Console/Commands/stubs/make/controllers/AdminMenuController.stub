@@ -1,0 +1,10 @@
+<?php
+
+namespace {{namespace}}Http\Controllers\AdminSiteMenu\Admin;
+
+use Illuminate\Http\Request;
+
+class MenuController extends \PortedCheese\AdminSiteMenu\Http\Controllers\MenuController
+{
+
+}

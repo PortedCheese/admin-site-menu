@@ -6,6 +6,9 @@
         <i class="fas fa-stream"></i>
     </a>
 @endif
+<a href="{{ route('admin.menus.show', ['menu' => $menu->id]) }}" class="btn btn-dark">
+    <i class="far fa-eye"></i>
+</a>
 <a href="{{ route('admin.menus.create-item', ['menu' => $menuId]) }}"
    class="btn btn-success">
     <i class="fas fa-plus"></i>

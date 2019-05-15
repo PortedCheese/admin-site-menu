@@ -2,18 +2,55 @@
 
 namespace PortedCheese\AdminSiteMenu\Http\Controllers;
 
+use App\Menu;
+use App\MenuItem;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuStoreRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\YamlLoadRequest;
-use PortedCheese\AdminSiteMenu\Models\Menu;
-use PortedCheese\AdminSiteMenu\Models\MenuItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Symfony\Component\Yaml\Yaml;
 
 class MenuController extends Controller
 {
+
+    /**
+     * Страница настроек.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function settings()
+    {
+        $config = siteconf()->get('admin-site-menu');
+        return view("admin-site-menu::admin.menu.settings", [
+            'config' => (object) $config,
+        ]);
+    }
+
+    /**
+     * Сохранить настройки.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function saveSettings(Request $request)
+    {
+        $config = siteconf()->get('admin-site-menu');
+
+        if ($request->has('own-admin')) {
+            $config['useOwnAdminRoutes'] = true;
+        }
+        else {
+            $config['useOwnAdminRoutes'] = false;
+        }
+
+        siteconf()->save('admin-site-menu', $config);
+        return redirect()
+            ->back()
+            ->with('success', "Конфигурация обновлена");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +63,13 @@ class MenuController extends Controller
         ]);
     }
 
+    public function show(Menu $menu)
+    {
+        return view("admin-site-menu::admin.menu.show", [
+            'menu' => $menu,
+        ]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -34,9 +78,9 @@ class MenuController extends Controller
      */
     public function store(MenuStoreRequest $request)
     {
-        Menu::create($request->all());
+        $menu = Menu::create($request->all());
         return redirect()
-            ->route('admin.menus.index')
+            ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Новое меню добавлено');
     }
 
@@ -52,7 +96,7 @@ class MenuController extends Controller
         if (in_array($menu->key, ['main', 'admin'])) {
             return redirect()
                 ->back()
-                ->with('error', 'Невозможно удалить это меню');
+                ->with('danger', 'Невозможно удалить это меню');
         }
         $menu->delete();
         return redirect()
@@ -85,7 +129,7 @@ class MenuController extends Controller
     public function storeItem(MenuItemStoreRequest $request, Menu $menu)
     {
         MenuItem::create($request->all());
-        return redirect()->route('admin.menus.index')
+        return redirect()->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Пункт меню добавлен');
     }
 
@@ -97,8 +141,10 @@ class MenuController extends Controller
      */
     public function destroyItem(MenuItem $menuItem)
     {
+        $menu = $menuItem->menu;
         $menuItem->delete();
-        return redirect()->route('admin.menus.index')
+        return redirect()
+            ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Пункт меню удален');
     }
 
@@ -124,8 +170,10 @@ class MenuController extends Controller
      */
     public function updateItem(MenuItemUpdateRequest $request, MenuItem $menuItem)
     {
+        $menu = $menuItem->menu;
         $menuItem->update($request->all());
-        return redirect()->back()
+        return redirect()
+            ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Успешно обновлено');
     }
 
@@ -173,6 +221,13 @@ class MenuController extends Controller
         }
     }
 
+    /**
+     * Изменить вес меню.
+     *
+     * @param Request $request
+     * @param MenuItem $menuItem
+     * @return array
+     */
     public function changeWeight(Request $request, MenuItem $menuItem)
     {
         if (!(

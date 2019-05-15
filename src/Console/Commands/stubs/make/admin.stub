@@ -1,28 +1,16 @@
-<?php
 
-Route::group([
-    'prefix' => "admin",
-    'as' => 'admin.',
-    'middleware' => ['web', 'role:admin'],
-    'namespace' => 'PortedCheese\AdminSiteMenu\Http\Controllers'
-], function () {
-    // Настройки.
-    Route::get('menus/settings', "MenuController@settings")
-        ->name('settings.menus');
-    Route::put('menus/settings', "MenuController@saveSettings")
-        ->name('settings.menus.save');
-});
 
-if (! siteconf()->get('admin-site-menu.useOwnAdminRoutes')) {
+if (siteconf()->get('admin-site-menu.useOwnAdminRoutes')) {
     Route::group([
         'prefix' => "admin",
         'as' => 'admin.',
-        'middleware' => ['web', 'role:admin|editor'],
-        'namespace' => 'PortedCheese\AdminSiteMenu\Http\Controllers'
+        'middleware' => ['role:admin|editor'],
+        'namespace' => 'AdminSiteMenu\Admin'
     ], function () {
 
         // Роуты меню.
         Route::resource('menus', 'MenuController')->except([
+            'show',
             'edit'
         ]);
 

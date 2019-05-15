@@ -149,6 +149,20 @@ class MenuItem extends Model
             $data['class'] = false;
             $data['ico'] = str_replace('@', '', $this->class);
         }
+        $data['activeChild'] = [];
+        if (!empty($this->route)) {
+            foreach (explode('|', $this->route) as $item) {
+                // Разделить роут элемента.
+                $exploded = explode('.', str_replace("@", '', $item));
+                $route = [];
+                for ($i = 0; $i < count($exploded) - 1; $i++) {
+                    $route[] = $exploded[$i];
+                }
+                $explodedItemRoute = implode('.', $route);
+                $data['activeChild'][] = $explodedItemRoute;
+            }
+        }
+        debugbar()->info($data);
         return (object) $data;
     }
 
@@ -178,7 +192,8 @@ class MenuItem extends Model
         $childrenData = [];
         foreach ($this->children->sortBy('weight') as $child) {
             $info = $child->toArray();
-            $info['children'] = FALSE;
+            $info['children'] = false;
+            $info['ico'] = false;
             $info['url'] = $child->getUrl();
             $childrenData[] = (object) $info;
         }
@@ -211,6 +226,7 @@ class MenuItem extends Model
                 // Остальные можно заполнить по умолчанию.
                 // У дочерних не может быть еще дочерних.
                 $item['children'] = FALSE;
+                $item['ico'] = false;
                 $item['id'] = empty($item['id']) ? "{$this->id}-$key" : $item['id'];
                 $item['class'] = empty($item['class']) ? "" : $item['class'];
                 $item['target'] = empty($item['target']) ? "" : $item['target'];

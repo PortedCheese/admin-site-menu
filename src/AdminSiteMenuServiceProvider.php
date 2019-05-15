@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AdminSiteMenu;
 
+use App\Menu;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use PortedCheese\AdminSiteMenu\Console\Commands\MenuMakeCommand;
@@ -48,6 +49,16 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
                 }
             }
             $view->with('routes', $names);
+        });
+
+        // Добавляем главное меню сайта в основной шаблон сайта.
+        view()->composer('layouts.app', function ($view) {
+            $view->with('mainMenu', Menu::getByKey('main'));
+        });
+
+        $adminThemes = ['layouts.admin', 'layouts.paper', 'layouts.argon'];
+        view()->composer($adminThemes, function ($view) {
+            $view->with('adminMenu', Menu::getByKey('admin'));
         });
     }
 
