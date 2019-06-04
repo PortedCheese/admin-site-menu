@@ -12,11 +12,18 @@
 
 Выгружается компонент для изменения веса меню
 
-`php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider"`
+`php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider" --tag=public --force`
 
 Создать шаблоны в layouts и модели.
 
-`php artisan make:menu-settings`
+`php artisan make:menu-settings 
+    {--views : Only scaffold views}
+    {--force : Overwrite existing views by default}`
+
+Заменить контроллер и роуты.
+
+`php artisan override:admin-menu
+    {--admin : Scaffold admin}`
 
 Создаем таблицы
 

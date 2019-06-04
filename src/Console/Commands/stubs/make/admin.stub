@@ -10,7 +10,6 @@ if (siteconf()->get('admin-site-menu.useOwnAdminRoutes')) {
 
         // Роуты меню.
         Route::resource('menus', 'MenuController')->except([
-            'show',
             'edit'
         ]);
 
