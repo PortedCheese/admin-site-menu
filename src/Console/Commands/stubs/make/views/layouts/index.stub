@@ -22,8 +22,13 @@
                     for ($i = 0; $i < count($exploded) - 1; $i++) {
                         $route[] = $exploded[$i];
                     }
-                    $explodedCurrentRoute = implode('.', $route);
-                    $active = in_array($explodedCurrentRoute, $item->activeChild);
+                    if (! empty($route)) {
+                        $explodedCurrentRoute = implode('.', $route);
+                        $active = in_array($explodedCurrentRoute, $item->activeChild);
+                    }
+                    else {
+                        $active = $currentRoute == $item->route;
+                    }
                 }
             @endphp
             @if ($role = $item->middleware)

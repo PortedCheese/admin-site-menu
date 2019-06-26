@@ -162,7 +162,6 @@ class MenuItem extends Model
                 $data['activeChild'][] = $explodedItemRoute;
             }
         }
-        debugbar()->info($data);
         return (object) $data;
     }
 
