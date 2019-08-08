@@ -151,15 +151,18 @@ class MenuItem extends Model
         }
         $data['activeChild'] = [];
         if (!empty($this->route)) {
-            foreach (explode('|', $this->route) as $item) {
-                // Разделить роут элемента.
-                $exploded = explode('.', str_replace("@", '', $item));
-                $route = [];
-                for ($i = 0; $i < count($exploded) - 1; $i++) {
-                    $route[] = $exploded[$i];
+            $exploded = explode('|', $this->route);
+            if (count($exploded) > 1) {
+                foreach ($exploded as $item) {
+                    // Разделить роут элемента.
+                    $exploded = explode('.', str_replace("@", '', $item));
+                    $route = [];
+                    for ($i = 0; $i < count($exploded) - 1; $i++) {
+                        $route[] = $exploded[$i];
+                    }
+                    $explodedItemRoute = implode('.', $route);
+                    $data['activeChild'][] = $explodedItemRoute;
                 }
-                $explodedItemRoute = implode('.', $route);
-                $data['activeChild'][] = $explodedItemRoute;
             }
         }
         return (object) $data;
