@@ -151,16 +151,16 @@ class MenuItem extends Model
         }
         $data['activeChild'] = [];
         if (!empty($this->route)) {
-            $exploded = explode('|', $this->route);
-            if (count($exploded) > 1) {
-                foreach ($exploded as $item) {
-                    // Разделить роут элемента.
-                    $exploded = explode('.', str_replace("@", '', $item));
-                    $route = [];
-                    for ($i = 0; $i < count($exploded) - 1; $i++) {
-                        $route[] = $exploded[$i];
-                    }
-                    $explodedItemRoute = implode('.', $route);
+            foreach (explode('|', $this->route) as $item) {
+                // Разделить роут элемента.
+                $exploded = explode('.', str_replace("@", '', $item));
+                $route = [];
+                for ($i = 0; $i < count($exploded) - 1; $i++) {
+                    $route[] = $exploded[$i];
+                }
+                $explodedItemRoute = implode('.', $route);
+                // TODO: separated condition.
+                if ($explodedItemRoute != 'webflow.page') {
                     $data['activeChild'][] = $explodedItemRoute;
                 }
             }
