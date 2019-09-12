@@ -54,6 +54,14 @@ class MenuMakeCommand extends BaseConfigModelCommand
         'layouts/link.stub' => 'layouts/menu/link.blade.php',
     ];
 
+    protected $vueIncludes = [
+        'admin' => [
+            'change-menu-weight' => "MenuWeightComponent",
+        ]
+    ];
+
+    protected $vueFolder = "admin-site-menu";
+
     /**
      * Create a new command instance.
      *
@@ -80,6 +88,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
         if (! $this->option('views')) {
             $this->exportModels();
             $this->makeDefaultMenus();
+            $this->makeVueIncludes('admin');
         }
     }
 
