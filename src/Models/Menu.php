@@ -16,7 +16,7 @@ class Menu extends Model
     {
         parent::boot();
 
-        static::deleting(function ($menu) {
+        static::deleting(function (\App\Menu $menu) {
             // Удаляем пункты меню.
             $menu->clearItems();
         });

@@ -34,7 +34,7 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
             ]);
         }
 
-        view()->composer('admin-site-menu::admin.menu.routes-modal', function ($view) {
+        view()->composer('admin-site-menu::admin.includes.routes-modal', function ($view) {
             $routes = Route::getRoutes();
             $names = [];
             foreach ($routes->getRoutesByName() as $name => $route) {

@@ -59,7 +59,7 @@ class MenuController extends Controller
     public function index()
     {
         return view('admin-site-menu::admin.menu.index', [
-            'menus' => Menu::all(),
+            'menus' => Menu::query()->orderBy("title")->get(),
         ]);
     }
 
@@ -113,7 +113,7 @@ class MenuController extends Controller
      */
     public function createItem(Menu $menu, MenuItem $item = NULL)
     {
-        return view('admin-site-menu::admin.menu.create-item', [
+        return view('admin-site-menu::admin.item.create', [
             'menu' => $menu,
             'parent' => !empty($item) ? $item->id : $item,
         ]);
@@ -129,7 +129,8 @@ class MenuController extends Controller
     public function storeItem(MenuItemStoreRequest $request, Menu $menu)
     {
         MenuItem::create($request->all());
-        return redirect()->route('admin.menus.show', ['menu' => $menu])
+        return redirect()
+            ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Пункт меню добавлен');
     }
 
@@ -156,8 +157,9 @@ class MenuController extends Controller
      */
     public function editItem(MenuItem $menuItem)
     {
-        return view('admin-site-menu::admin.menu.edit-item', [
+        return view('admin-site-menu::admin.item.edit', [
             'menuItem' => $menuItem,
+            'menu' => $menuItem->menu,
         ]);
     }
 

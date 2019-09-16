@@ -5,12 +5,16 @@
 
 @section('admin')
     <div class="col-12">
-        <a href="{{ route('admin.menus.create-item', ['menu' => $menu]) }}"
-           class="btn btn-success">
-            Добавить
-        </a>
-    </div>
-    <div class="col-12">
-        @include('admin-site-menu::admin.menu.items-table')
+        <div class="card">
+            <div class="card-header">
+                <a href="{{ route('admin.menus.create-item', ['menu' => $menu]) }}"
+                   class="btn btn-success">
+                    Добавить
+                </a>
+            </div>
+            <div class="card-body">
+                @include('admin-site-menu::admin.item.table')
+            </div>
+        </div>
     </div>
 @endsection
