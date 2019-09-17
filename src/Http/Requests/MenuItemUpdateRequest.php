@@ -25,7 +25,6 @@ class MenuItemUpdateRequest extends FormRequest
     {
         return [
             'title' => "required|min:2",
-            'weight' => 'required|integer',
         ];
     }
 }

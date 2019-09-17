@@ -128,7 +128,12 @@ class MenuController extends Controller
      */
     public function storeItem(MenuItemStoreRequest $request, Menu $menu)
     {
-        MenuItem::create($request->all());
+        $userInput = $request->all();
+        if (! empty($userInput['active_state'])) {
+            $userInput['active'] = explode("|", $userInput['active_state']);
+        }
+        $userInput['single'] = !empty($userInput['single']) ? 1 : 0;
+        MenuItem::create($userInput);
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Пункт меню добавлен');
@@ -173,7 +178,15 @@ class MenuController extends Controller
     public function updateItem(MenuItemUpdateRequest $request, MenuItem $menuItem)
     {
         $menu = $menuItem->menu;
-        $menuItem->update($request->all());
+        $userInput = $request->all();
+        if (! empty($userInput['active_state'])) {
+            $userInput['active'] = explode("|", $userInput['active_state']);
+        }
+        else {
+            $userInput['active'] = null;
+        }
+        $userInput['single'] = !empty($userInput['single']) ? 1 : 0;
+        $menuItem->update($userInput);
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Успешно обновлено');

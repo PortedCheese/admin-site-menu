@@ -22,6 +22,8 @@ class MenuItem extends Model
         'method',
         'template',
         'ico',
+        'active',
+        'single',
     ];
 
     protected $casts = [
@@ -83,6 +85,15 @@ class MenuItem extends Model
         else {
             $this->attributes['url'] = $value;
         }
+    }
+
+    public function getActiveStateAttribute()
+    {
+        $array = $this->active;
+        if (empty($array)) {
+            $array = [];
+        }
+        return implode("|", $array);
     }
 
     /**
