@@ -34,15 +34,15 @@ class MenuItem extends Model
     {
         parent::boot();
 
-        static::deleting(function (\App\MenuItem $item) {
+        static::deleting(function ($item) {
             // Удаляем подпункты меню.
             $item->clearItems();
             $item->forgetCache();
         });
-        static::created(function (\App\MenuItem $item) {
+        static::created(function ($item) {
             $item->forgetCache();
         });
-        static::updated(function (\App\MenuItem $item) {
+        static::updated(function ($item) {
             $item->forgetCache();
         });
     }
