@@ -5,6 +5,7 @@ namespace PortedCheese\AdminSiteMenu\Console\Commands;
 use App\Menu;
 use App\MenuItem;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use PortedCheese\BaseSettings\Console\Commands\BaseConfigModelCommand;
 
@@ -17,8 +18,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
      * @var string
      */
     protected $signature = 'make:menu-settings
-                    {--views : Only scaffold views}
-                    {--force : Overwrite existing views by default}';
+                    {--replace-old : Refactor old menu items}';
 
     /**
      * The console command description.
@@ -79,13 +79,14 @@ class MenuMakeCommand extends BaseConfigModelCommand
      */
     public function handle()
     {
-        $this->createDirectories();
+        if ($this->option('replace-old')) {
+            $this->refactorOldMenus();
+        }
+        else {
+            $this->createDirectories();
 
-        $this->exportViews();
+            $this->makeConfig();
 
-        $this->makeConfig();
-
-        if (! $this->option('views')) {
             $this->exportModels();
             $this->makeDefaultMenus();
             $this->makeVueIncludes('admin');
@@ -134,32 +135,6 @@ class MenuMakeCommand extends BaseConfigModelCommand
     }
 
     /**
-     * Export the authentication views.
-     *
-     * @return void
-     */
-    protected function exportViews()
-    {
-        foreach ($this->views as $key => $value) {
-            if (
-                file_exists($view = resource_path('views/'.$value)) &&
-                !$this->option('force')
-            ) {
-                if (! $this->confirm("The [{$value}] view already exists. Do you want to replace it?")) {
-                    continue;
-                }
-            }
-
-            copy(
-                __DIR__.'/stubs/make/views/'.$key,
-                $view
-            );
-
-            $this->info("View [{$value}] generated successfully.");
-        }
-    }
-
-    /**
      * Create the directories for the files.
      *
      * @return void
@@ -172,6 +147,30 @@ class MenuMakeCommand extends BaseConfigModelCommand
 
         if (! is_dir($directory = resource_path('views/admin/menu'))) {
             mkdir($directory, 0755, true);
+        }
+    }
+
+    protected function refactorOldMenus()
+    {
+        $items = MenuItem::query()
+            ->get();
+
+        foreach ($items as $item) {
+            $needSave = false;
+            if (strripos($item->class, '@') === 0) {
+                $item->ico = str_replace("@", "", $item->class);
+                $item->class = "";
+                $needSave = true;
+            }
+            if (strripos($item->route, "@") === 0) {
+                $text = str_replace("@", "", $item->route);
+                $item->active = explode("|", $text);
+                $item->route = "";
+                $needSave = true;
+            }
+            if ($needSave) {
+                $item->save();
+            }
         }
     }
 }

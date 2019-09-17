@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use PortedCheese\AdminSiteMenu\Console\Commands\MenuMakeCommand;
 use PortedCheese\AdminSiteMenu\Console\Commands\MenuOverrideCommand;
+use PortedCheese\AdminSiteMenu\Http\Helpers\MenuActive;
 
 class AdminSiteMenuServiceProvider extends ServiceProvider
 {
@@ -66,7 +67,9 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
 
     public function register()
     {
-
+        $this->app->bind('menuactive', function () {
+            return app(MenuActive::class);
+        });
     }
 
 }

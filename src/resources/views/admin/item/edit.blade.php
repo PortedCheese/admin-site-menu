@@ -78,6 +78,20 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="ico">Icon</label>
+                        <input type="text"
+                               id="ico"
+                               name="ico"
+                               value="{{ old("ico", $menuItem->ico) }}"
+                               class="form-control @error("ico") is-invalid @enderror">
+                        @error("ico")
+                            <div class="invalid-feedback" role="alert">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
                         <label for="middleware">Роли</label>
                         <input type="text"
                                id="middleware"

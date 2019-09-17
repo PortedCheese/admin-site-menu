@@ -5,6 +5,7 @@ namespace PortedCheese\AdminSiteMenu\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use PortedCheese\AdminSiteMenu\Http\Resources\MenuItem as MenuItemResource;
 
 class MenuItem extends Model
 {
@@ -20,21 +21,26 @@ class MenuItem extends Model
         'target',
         'method',
         'template',
+        'ico',
+    ];
+
+    protected $casts = [
+        "active" => "array",
     ];
 
     protected static function boot()
     {
         parent::boot();
 
-        static::deleting(function ($item) {
+        static::deleting(function (\App\MenuItem $item) {
             // Удаляем подпункты меню.
             $item->clearItems();
             $item->forgetCache();
         });
-        static::created(function ($item) {
+        static::created(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
-        static::updated(function ($item) {
+        static::updated(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
     }
@@ -113,7 +119,7 @@ class MenuItem extends Model
             $url = $this->url;
         }
         else {
-            $url = FALSE;
+            $url = false;
         }
         return $url;
     }
@@ -135,7 +141,8 @@ class MenuItem extends Model
      */
     public function prepareForRender()
     {
-        $data = $this->toArray();
+        $resource = new MenuItemResource($this);
+        $data = $resource->toArray(request());
         if (!empty($this->method)) {
             $children = $this->fillChildrenFromMethod();
         }
@@ -144,27 +151,6 @@ class MenuItem extends Model
         }
         $data['children'] = $children;
         $data['url'] = $this->getUrl();
-        $data['ico'] = false;
-        if (!empty($this->class) && strripos($this->class, '@') === 0) {
-            $data['class'] = false;
-            $data['ico'] = str_replace('@', '', $this->class);
-        }
-        $data['activeChild'] = [];
-        if (!empty($this->route)) {
-            foreach (explode('|', $this->route) as $item) {
-                // Разделить роут элемента.
-                $exploded = explode('.', str_replace("@", '', $item));
-                $route = [];
-                for ($i = 0; $i < count($exploded) - 1; $i++) {
-                    $route[] = $exploded[$i];
-                }
-                $explodedItemRoute = implode('.', $route);
-                // TODO: separated condition.
-                if ($explodedItemRoute != 'webflow.page') {
-                    $data['activeChild'][] = $explodedItemRoute;
-                }
-            }
-        }
         return (object) $data;
     }
 

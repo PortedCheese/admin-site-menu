@@ -9,37 +9,15 @@
                 @includeIf($item->template, ['ico' => $item->ico])
             @endif
         @elseif ($item->url)
-            @php
-                $class = "nav-item";
-                $class .= $currentRoute == $item->route ? ' active' : '';
-                $class .= $item->children ? ' dropdown' : '';
-
-                $active = false;
-                if ($item->activeChild) {
-                    // Разделить текущий роут.
-                    $exploded = explode('.', $currentRoute);
-                    $route = [];
-                    for ($i = 0; $i < count($exploded) - 1; $i++) {
-                        $route[] = $exploded[$i];
-                    }
-                    if (! empty($route)) {
-                        $explodedCurrentRoute = implode('.', $route);
-                        $active = in_array($explodedCurrentRoute, $item->activeChild);
-                    }
-                    else {
-                        $active = $currentRoute == $item->route;
-                    }
-                }
-            @endphp
             @if ($role = $item->middleware)
                 @role($role)
-                <li class="{{ $class }}">
-                    @include('layouts.menu.link', ['item' => $item, 'drop' => false, 'active' => $active])
+                <li class="{{ menuactive()->getListClass($item, "nav-item") }}">
+                    @include('admin-site-menu::layouts.link', ['item' => $item, 'begin' => "nav-link", 'active' => menuactive()->getActive($item)])
                 </li>
                 @endrole
             @else
-                <li class="{{ $class }}">
-                    @include('layouts.menu.link', ['item' => $item, 'drop' => false, 'active' => $active])
+                <li class="{{ menuactive()->getListClass($item, "nav-item") }}">
+                    @include('admin-site-menu::layouts.link', ['item' => $item, 'begin' => "nav-link", 'active' => menuactive()->getActive($item)])
                 </li>
             @endif
         @endif

@@ -1,12 +1,4 @@
-@php
-    $class = $drop ? "dropdown-item" : "nav-link";
-    $class .= $item->children ? ' dropdown-toggle' : '';
-    $class .= $item->class ? " $item->class" : '';
-    if ($active) {
-        $class .= " active";
-    }
-@endphp
-<a class="{{ $class }}"
+<a class="{{ menuactive()->getLinkClass($item, $active, $begin) }}"
    @if ($item->target)
    target="{{ $item->target }}"
    @endif
@@ -26,7 +18,7 @@
 @if ($item->children)
     <div class="dropdown-menu" aria-labelledby="item-drop-{{ $item->id }}">
         @foreach($item->children as $child)
-            @include('layouts.menu.link', ['item' => $child, 'drop' => true, 'active' => false])
+            @include('admin-site-menu::layouts.link', ['item' => $child, 'begin' => "dropdown-item", 'active' => false])
         @endforeach
     </div>
 @endif
