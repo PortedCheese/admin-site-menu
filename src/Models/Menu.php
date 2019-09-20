@@ -4,6 +4,9 @@ namespace PortedCheese\AdminSiteMenu\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use App\MenuItem;
+use PortedCheese\AdminSiteMenu\Http\Requests\MenuStoreRequest;
+use PortedCheese\AdminSiteMenu\Http\Requests\YamlLoadRequest;
 
 class Menu extends Model
 {
@@ -29,7 +32,7 @@ class Menu extends Model
      */
     public function items()
     {
-        return $this->hasMany('PortedCheese\AdminSiteMenu\Models\MenuItem');
+        return $this->hasMany(MenuItem::class);
     }
 
     /**
@@ -55,7 +58,9 @@ class Menu extends Model
             return $cached;
         }
         try {
-            $menu = Menu::where('key', $key)->firstOrFail();
+            $menu = self::query()
+                ->where('key', $key)
+                ->firstOrFail();
         } catch (\Exception $e) {
             return [];
         }
@@ -78,7 +83,7 @@ class Menu extends Model
     public static function getExport()
     {
         $data = [];
-        $menus = Menu::all();
+        $menus = self::all();
         foreach ($menus as $menu) {
             $info = $menu->toArray();
             $items = [];
@@ -103,10 +108,11 @@ class Menu extends Model
                 continue;
             }
             try {
-                $menu = Menu::where('key', $menuData['key'])
+                $menu = self::query()
+                    ->where('key', $menuData['key'])
                     ->firstOrFail();
             } catch (\Exception $e) {
-                $menu = Menu::create($menuData);
+                $menu = self::create($menuData);
             }
             // Чистим старое меню, что бы не дублировать.
             $menu->clearItems();
@@ -117,6 +123,50 @@ class Menu extends Model
             foreach ($menuData['items'] as $menuItemData) {
                 MenuItem::makeImport($menuId, $menuItemData);
             }
+        }
+    }
+
+    /**
+     * Валидация создания меню.
+     *
+     * @param MenuStoreRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestMenuStore(MenuStoreRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                "title" => "Название",
+                "key" => "Ключ",
+            ];
+        }
+        else {
+            return [
+                'title' => "required|min:2|unique:menus,title",
+                'key' => "required|min:2|unique:menus,key",
+            ];
+        }
+    }
+
+    /**
+     * Валидация загрузки структуры меню.
+     *
+     * @param YamlLoadRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestYamlLoad(YamlLoadRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                "file" => "Файл",
+            ];
+        }
+        else {
+            return [
+                'file' => 'required|file|mimes:yaml,yml,txt',
+            ];
         }
     }
 }

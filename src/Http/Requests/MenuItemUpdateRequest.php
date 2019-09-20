@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AdminSiteMenu\Http\Requests;
 
+use App\MenuItem;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MenuItemUpdateRequest extends FormRequest
@@ -23,8 +24,11 @@ class MenuItemUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => "required|min:2",
-        ];
+        return MenuItem::requestMenuItemUpdate($this);
+    }
+
+    public function attributes()
+    {
+        return MenuItem::requestMenuItemUpdate($this, true);
     }
 }

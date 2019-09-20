@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AdminSiteMenu\Http\Requests;
 
+use App\Menu;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MenuStoreRequest extends FormRequest
@@ -23,9 +24,11 @@ class MenuStoreRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => "required|min:2|unique:menus,title",
-            'key' => "required|min:2|unique:menus,key",
-        ];
+        return Menu::requestMenuStore($this);
+    }
+
+    public function attributes()
+    {
+        return Menu::requestMenuStore($this, true);
     }
 }

@@ -5,7 +5,10 @@ namespace PortedCheese\AdminSiteMenu\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
+use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
 use PortedCheese\AdminSiteMenu\Http\Resources\MenuItem as MenuItemResource;
+use App\Menu;
 
 class MenuItem extends Model
 {
@@ -34,15 +37,15 @@ class MenuItem extends Model
     {
         parent::boot();
 
-        static::deleting(function ($item) {
+        static::deleting(function (\App\MenuItem $item) {
             // Удаляем подпункты меню.
             $item->clearItems();
             $item->forgetCache();
         });
-        static::created(function ($item) {
+        static::created(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
-        static::updated(function ($item) {
+        static::updated(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
     }
@@ -52,7 +55,7 @@ class MenuItem extends Model
      */
     public function menu()
     {
-        return $this->belongsTo('PortedCheese\AdminSiteMenu\Models\Menu');
+        return $this->belongsTo(Menu::class);
     }
 
     /**
@@ -60,7 +63,7 @@ class MenuItem extends Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function children() {
-        return $this->hasMany('PortedCheese\AdminSiteMenu\Models\MenuItem', 'parent_id');
+        return $this->hasMany(\App\MenuItem::class, 'parent_id');
     }
 
     /**
@@ -70,7 +73,7 @@ class MenuItem extends Model
      */
     public function parent()
     {
-        return $this->belongsTo('App\MenuItem', 'parent_id');
+        return $this->belongsTo(\App\MenuItem::class, 'parent_id');
     }
 
     /**
@@ -105,14 +108,58 @@ class MenuItem extends Model
     public static function makeImport($menuId, $itemData)
     {
         $itemData['menu_id'] = $menuId;
-        $menuItem = MenuItem::create($itemData);
+        $menuItem = \App\MenuItem::create($itemData);
         if (empty($itemData['children'])) {
             return;
         }
         foreach ($itemData['children'] as $child) {
             $child['menu_id'] = $menuId;
             $child['parent_id'] = $menuItem->id;
-            MenuItem::create($child);
+            \App\MenuItem::create($child);
+        }
+    }
+
+    /**
+     * Валидация создания пункта меню.
+     *
+     * @param MenuItemStoreRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestMenuItemStore(MenuItemStoreRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                "menu_id" => "Меню",
+                "title" => "Заголовок",
+            ];
+        }
+        else {
+            return [
+                'menu_id' => "required|exists:menus,id",
+                'title' => "required|min:2",
+            ];
+        }
+    }
+
+    /**
+     * Валидация обновления пункта меню.
+     *
+     * @param MenuItemUpdateRequest $validator
+     * @param bool $attr
+     * @return array
+     */
+    public static function requestMenuItemUpdate(MenuItemUpdateRequest $validator, $attr = false)
+    {
+        if ($attr) {
+            return [
+                "title" => "Заголовок",
+            ];
+        }
+        else {
+            return [
+                'title' => "required|min:2",
+            ];
         }
     }
 
@@ -208,12 +255,7 @@ class MenuItem extends Model
     {
         $method = $this->method;
         $children = [];
-        if (class_exists('\App\MenuItem')) {
-            $class = new \App\MenuItem();
-        }
-        else {
-            $class = $this;
-        }
+        $class = new \App\MenuItem();
         if (method_exists($class, $method)) {
             $children = [];
             $array = $class->{$method}();

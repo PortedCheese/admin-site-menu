@@ -2,6 +2,7 @@
 
 namespace PortedCheese\AdminSiteMenu\Http\Requests;
 
+use App\Menu;
 use Illuminate\Foundation\Http\FormRequest;
 
 class YamlLoadRequest extends FormRequest
@@ -23,8 +24,11 @@ class YamlLoadRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'file' => 'required|file|mimes:yaml,yml,txt',
-        ];
+        return Menu::requestYamlLoad($this);
+    }
+
+    public function attributes()
+    {
+        return Menu::requestYamlLoad($this, true);
     }
 }
