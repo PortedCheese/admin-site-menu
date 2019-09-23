@@ -16,42 +16,6 @@ class MenuController extends Controller
 {
 
     /**
-     * Страница настроек.
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function settings()
-    {
-        $config = siteconf()->get('admin-site-menu');
-        return view("admin-site-menu::admin.menu.settings", [
-            'config' => (object) $config,
-        ]);
-    }
-
-    /**
-     * Сохранить настройки.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveSettings(Request $request)
-    {
-        $config = siteconf()->get('admin-site-menu');
-
-        if ($request->has('own-admin')) {
-            $config['useOwnAdminRoutes'] = true;
-        }
-        else {
-            $config['useOwnAdminRoutes'] = false;
-        }
-
-        siteconf()->save('admin-site-menu', $config);
-        return redirect()
-            ->back()
-            ->with('success', "Конфигурация обновлена");
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

@@ -4,8 +4,6 @@ namespace PortedCheese\AdminSiteMenu\Console\Commands;
 
 use App\Menu;
 use App\MenuItem;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schema;
 use PortedCheese\BaseSettings\Console\Commands\BaseConfigModelCommand;
 
@@ -34,13 +32,6 @@ class MenuMakeCommand extends BaseConfigModelCommand
     protected $models = [
         'Menu.stub' => 'Menu.php',
         'MenuItem.stub' => 'MenuItem.php',
-    ];
-
-    protected $configName = "admin-site-menu";
-
-    protected $configValues = [
-        'useOwnAdminRoutes' => false,
-        'useOwnSiteRoutes' => false,
     ];
 
     protected $dir = __DIR__;
@@ -85,8 +76,6 @@ class MenuMakeCommand extends BaseConfigModelCommand
         else {
             $this->createDirectories();
 
-            $this->makeConfig();
-
             $this->exportModels();
             $this->makeDefaultMenus();
             $this->makeVueIncludes('admin');
@@ -104,7 +93,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
         }
 
         try {
-            $menu = Menu::where('key', 'main')->firstOrFail();
+            Menu::where('key', 'main')->firstOrFail();
         }
         catch (\Exception $e) {
             $menu = Menu::create([
@@ -119,7 +108,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
         }
 
         try {
-            $menu = Menu::where('key', 'admin')->firstOrFail();
+            Menu::where('key', 'admin')->firstOrFail();
         }
         catch (\Exception $e) {
             $menu = Menu::create([
@@ -150,6 +139,9 @@ class MenuMakeCommand extends BaseConfigModelCommand
         }
     }
 
+    /**
+     * Пересобрать старые меню.
+     */
     protected function refactorOldMenus()
     {
         $items = MenuItem::query()
