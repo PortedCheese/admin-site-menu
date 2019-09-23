@@ -25,16 +25,17 @@ class MenuMakeCommand extends BaseConfigModelCommand
      */
     protected $description = 'Scaffold menu models';
 
+    protected $packageName = "AdminSiteMenu";
+
     /**
      * The models that need to be exported.
      * @var array
      */
-    protected $models = [
-        'Menu.stub' => 'Menu.php',
-        'MenuItem.stub' => 'MenuItem.php',
-    ];
+    protected $models = ['Menu', 'MenuItem',];
 
-    protected $dir = __DIR__;
+    protected $controllers = [
+        "Admin" => ["MenuController"]
+    ];
 
     /**
      * The views that need to be exported.
@@ -77,6 +78,9 @@ class MenuMakeCommand extends BaseConfigModelCommand
             $this->createDirectories();
 
             $this->exportModels();
+
+            $this->exportControllers("Admin");
+
             $this->makeDefaultMenus();
             $this->makeVueIncludes('admin');
         }

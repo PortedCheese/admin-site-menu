@@ -6,7 +6,7 @@ Route::group([
     'prefix' => "admin",
     'as' => 'admin.',
     'middleware' => ['web', 'role:admin|editor'],
-    'namespace' => 'PortedCheese\AdminSiteMenu\Http\Controllers'
+    'namespace' => 'App\Http\Controllers\Vendor\AdminSiteMenu\Admin'
 ], function () {
 
     // Роуты меню.

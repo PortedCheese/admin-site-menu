@@ -1,6 +1,6 @@
 <?php
 
-namespace PortedCheese\AdminSiteMenu\Http\Controllers;
+namespace PortedCheese\AdminSiteMenu\Http\Controllers\Admin;
 
 use App\Menu;
 use App\MenuItem;

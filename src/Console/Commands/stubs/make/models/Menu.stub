@@ -1,9 +1,0 @@
-<?php
-
-namespace {{namespace}};
-
-
-class Menu extends \PortedCheese\AdminSiteMenu\Models\Menu
-{
-
-}
