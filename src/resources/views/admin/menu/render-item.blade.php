@@ -1,12 +1,9 @@
-<tr
-        @if ($parent)
-            id="{{ $parent }}"
-            class="collapse table-secondary"
-        @endif
->
+<tr @if ($parent) id="{{ $parent }}" class="collapse table-secondary" @endif >
+    {{-- Пункт меню --}}
     <td>
         {{ $menuItem->title }} {{ !$parent ? "(" . $menuItem->children->count() . ")" : "" }}
     </td>
+    {{-- URL --}}
     <td>
         @if ($url = $menuItem->getUrl())
             <a href="{{ $url }}" target="_blank">
@@ -16,22 +13,27 @@
             Не определено
         @endif
     </td>
+    {{-- Вес --}}
     <td>
         <change-menu-weight csrf-token="{{ csrf_token() }}"
                             url="{{ route('admin.vue.menu.weight', ['menuItem' => $menuItem->id]) }}"
                             weight="{{ $menuItem->weight }}"
                             item-id="{{ $menuItem->id }}">
-
         </change-menu-weight>
     </td>
-    <td>{{ $menuItem->class }}</td>
-    <td>{{ $menuItem->middleware }}</td>
-    <td>{{ $menuItem->target }}</td>
-    <td>{{ $menuItem->method }}</td>
+    {{-- Действия --}}
     <td>
-        <confirm-delete-model-button model-id="{{ $menuItem->id }}">
-            @if (!$parent)
-                <template slot="other">
+        <div role="toolbar" class="btn-toolbar">
+            <div class="btn-group btn-group-sm mr-1">
+                <a href="{{ route('admin.menus.edit-item', ['menuItem' => $menuItem]) }}" class="btn btn-primary">
+                    <i class="far fa-edit"></i>
+                </a>
+                <button type="button" class="btn btn-danger" data-confirm="{{ "delete-form-{$menuItem->id}" }}">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            </div>
+            @if (! $parent)
+                <div class="btn-group btn-group-sm">
                     @if ($menuItem->children->count())
                         <a href="#collapse-menu-item-list-{{ $menuItem->id }}"
                            data-toggle="collapse"
@@ -46,23 +48,21 @@
                             <i class="fas fa-plus"></i>
                         </a>
                     @endif
-                </template>
+                </div>
             @endif
-            <template slot="edit">
-                <a href="{{ route('admin.menus.edit-item', ['menuItem' => $menuItem]) }}" class="btn btn-primary">
-                    <i class="far fa-edit"></i>
-                </a>
-            </template>
-            <template slot="delete">
+        </div>
+        <confirm-form :id="'{{ "delete-form-{$menuItem->id}" }}'">
+            <template>
                 <form action="{{ route('admin.menus.destroy-item', ['menuItem' => $menuItem]) }}"
-                      id="delete-{{ $menuItem->id }}"
+                      id="delete-form-{{ $menuItem->id }}"
                       class="btn-group"
                       method="post">
                     @csrf
                     <input type="hidden" name="_method" value="DELETE">
                 </form>
             </template>
-        </confirm-delete-model-button>
+        </confirm-form>
+
     </td>
 </tr>
 @if ($menuItem->children->count() && !$parent)

@@ -33,33 +33,35 @@
                                 <td>{{ $menu->title }} ({{ $menu->items->count() }})</td>
                                 <td>{{ $menu->key }}</td>
                                 <td>
-                                    @if (! in_array($menu->key, ['main', 'admin']))
-                                        <confirm-delete-model-button model-id="{{ $menu->id }}">
-                                            <template slot="other">
-                                                @include('admin-site-menu::admin.includes.menu-buttons', [
-                                                    'menuId' => $menu->id,
-                                                    'count' => false
-                                                ])
-                                            </template>
-                                            @role('admin')
-                                            <template slot="delete">
-                                                <form action="{{ route('admin.menus.destroy', ['menu' => $menu]) }}"
-                                                      id="delete-{{ $menu->id }}"
-                                                      class="btn-group"
-                                                      method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="_method" value="DELETE">
-                                                </form>
-                                            </template>
-                                            @endrole
-                                        </confirm-delete-model-button>
-                                    @else
-                                        <div class="btn-group" role="group">
+                                    <div role="toolbar" class="btn-toolbar">
+                                        <div class="btn-group btn-group-sm mr-1">
                                             @include('admin-site-menu::admin.includes.menu-buttons', [
                                                 'menuId' => $menu->id,
                                                 'count' => false
                                             ])
+                                            @if (! in_array($menu->key, ['main', 'admin']))
+                                                @role('admin')
+                                                    <button type="button" class="btn btn-danger" data-confirm="{{ "delete-form-{$menu->id}" }}">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                @endrole
+                                            @endif
                                         </div>
+                                    </div>
+                                    @if (! in_array($menu->key, ['main', 'admin']))
+                                        @role('admin')
+                                            <confirm-form :id="'{{ "delete-form-{$menu->id}" }}'">
+                                                <template>
+                                                    <form action="{{ route('admin.menus.destroy', ['menu' => $menu]) }}"
+                                                          id="delete-form-{{ $menu->id }}"
+                                                          class="btn-group"
+                                                          method="post">
+                                                        @csrf
+                                                        <input type="hidden" name="_method" value="DELETE">
+                                                    </form>
+                                                </template>
+                                            </confirm-form>
+                                        @endrole
                                     @endif
                                 </td>
                             </tr>

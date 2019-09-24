@@ -5,10 +5,6 @@
             <th>Пункт меню</th>
             <th>URL</th>
             <th>Вес</th>
-            <th>Класс</th>
-            <th>Роли</th>
-            <th>Target</th>
-            <th>Метод</th>
             <th>Действия</th>
         </tr>
         </thead>
