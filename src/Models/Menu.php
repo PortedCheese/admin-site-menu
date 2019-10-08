@@ -54,7 +54,7 @@ class Menu extends Model
     public static function getByKey($key)
     {
         $cached = Cache::get("menu:$key");
-        if (!empty($cached) && false) {
+        if (!empty($cached)) {
             return $cached;
         }
         try {
