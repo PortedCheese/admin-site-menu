@@ -16,6 +16,10 @@ class MenuMakeCommand extends BaseConfigModelCommand
      * @var string
      */
     protected $signature = 'make:menu-settings
+                    {--all : Run full command}
+                    {--models : Create models}
+                    {--controllers : Create controllers}
+                    {--vue : Add vue to file}
                     {--replace-old : Refactor old menu items}';
 
     /**
@@ -49,6 +53,8 @@ class MenuMakeCommand extends BaseConfigModelCommand
     protected $vueIncludes = [
         'admin' => [
             'change-menu-weight' => "MenuWeightComponent",
+            'admin-menu-list' => "MenuListComponent",
+            'admin-menu-item' => "MenuItemComponent",
         ]
     ];
 
@@ -71,18 +77,25 @@ class MenuMakeCommand extends BaseConfigModelCommand
      */
     public function handle()
     {
+        $this->makeDefaultMenus();
+
         if ($this->option('replace-old')) {
             $this->refactorOldMenus();
         }
         else {
-            $this->createDirectories();
+            $all = $this->option("all");
 
-            $this->exportModels();
+            if ($this->option("models") || $all) {
+                $this->exportModels();
+            }
 
-            $this->exportControllers("Admin");
+            if ($this->option("controllers") || $all) {
+                $this->exportControllers("Admin");
+            }
 
-            $this->makeDefaultMenus();
-            $this->makeVueIncludes('admin');
+            if ($this->option("vue") || $all) {
+                $this->makeVueIncludes('admin');
+            }
         }
     }
 
@@ -124,22 +137,6 @@ class MenuMakeCommand extends BaseConfigModelCommand
                 'menu_id' => $menu->id,
                 'route' => 'admin.menus.index',
             ]);
-        }
-    }
-
-    /**
-     * Create the directories for the files.
-     *
-     * @return void
-     */
-    protected function createDirectories()
-    {
-        if (! is_dir($directory = resource_path('views/layouts/menu'))) {
-            mkdir($directory, 0755, true);
-        }
-
-        if (! is_dir($directory = resource_path('views/admin/menu'))) {
-            mkdir($directory, 0755, true);
         }
     }
 

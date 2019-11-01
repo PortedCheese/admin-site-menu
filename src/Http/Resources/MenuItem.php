@@ -29,6 +29,11 @@ class MenuItem extends JsonResource
             'method' => ! empty($this->method) ? $this->method : false,
             'template' => ! empty($this->template) ? $this->template : false,
             'children' => [],
+            'parent_id' => $this->parent_id,
+
+            'editItemUrl' => route('admin.menus.edit-item', ['menuItem' => $this]),
+            'createChildUrl' => route('admin.menus.create-child-item', ['menu' => $this->menu_id, 'item' => $this]),
+            'deleteItemUrl' => route('admin.menus.destroy-item', ['menuItem' => $this])
         ];
     }
 }

@@ -8,15 +8,17 @@
 ## Установка
 `composer require portedcheese/admin-site-menu`
 
+`php artisan migrate`
+
 Выгружается компонент для изменения веса меню
 
-`php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider" --tag=public --force`
+    `php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider" --tag=public --force`
 
 Создать шаблоны в layouts и модели.
 
-`php artisan make:menu-settings 
-    {--replace-old : Пересобрать старое меню}`
-
-Создаем таблицы
-
-`php artisan migrate`
+    `php artisan make:menu-settings
+        {--all : Run full command}
+        {--models : Create models}
+        {--controllers : Create controllers}
+        {--vue : Add vue to file} 
+        {--replace-old : Пересобрать старое меню}`

@@ -43,12 +43,15 @@ Route::group([
     });
 
     // Роуты для аякса.
-    Route::prefix('vue')->group(function () {
-        // Роуты меню.
-        Route::prefix('menu')->group(function () {
-            // Сменить вес элемента.
-            Route::post('/{menuItem}/weight', 'MenuController@changeWeight')
-                ->name('vue.menu.weight');
-        });
+    Route::group([
+        'prefix' => "vue/menu",
+        "as" => "vue.menu.",
+    ], function () {
+        // Сменить вес элемента.
+        Route::post('/{menuItem}/weight', 'MenuController@changeWeight')
+            ->name('weight');
+        // Изменить вес элементов.
+        Route::put("/order", "MenuController@changeItemsWeight")
+            ->name("order");
     });
 });

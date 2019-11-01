@@ -42,9 +42,22 @@ class MenuItem extends Model
             $item->clearItems();
             $item->forgetCache();
         });
+
+        static::creating(function (\App\MenuItem $model) {
+            $query = \App\MenuItem::query()
+                ->select("weight");
+            if (! empty($model->parent_id)) {
+                $query->where("parent_id", $model->parent_id);
+            }
+            $max = $query->where("menu_id", $model->menu_id)
+                ->max("weight");
+            $model->weight = $max + 1;
+        });
+
         static::created(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
+
         static::updated(function (\App\MenuItem $item) {
             $item->forgetCache();
         });
@@ -237,7 +250,7 @@ class MenuItem extends Model
     {
         $childrenData = [];
         foreach ($this->children->sortBy('weight') as $child) {
-            $info = $child->toArray();
+            $info = new MenuItemResource($child);
             $info['children'] = false;
             $info['ico'] = false;
             $info['url'] = $child->getUrl();

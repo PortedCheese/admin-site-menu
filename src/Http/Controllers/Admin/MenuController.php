@@ -4,6 +4,8 @@ namespace PortedCheese\AdminSiteMenu\Http\Controllers\Admin;
 
 use App\Menu;
 use App\MenuItem;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuStoreRequest;
@@ -29,8 +31,11 @@ class MenuController extends Controller
 
     public function show(Menu $menu)
     {
+        $menuStructure = Menu::getByKey($menu->key);
+        debugbar()->info($menuStructure);
         return view("admin-site-menu::admin.menu.show", [
             'menu' => $menu,
+            'structure' => $menuStructure,
         ]);
     }
 
@@ -225,5 +230,41 @@ class MenuController extends Controller
             'success' => TRUE,
             'weight' => $menuItem->weight,
         ];
+    }
+
+    public function changeItemsWeight(Request $request)
+    {
+        if (! empty($request->get("items"))) {
+            $items = $request->get("items");
+            $menuId = $items[0]['menu_id'];
+            $this->setWeight($items);
+            try {
+                $menu = Menu::find($menuId);
+                Cache::forget("menu:{$menu->key}");
+            }
+            catch (\Exception $exception) {
+                return response()
+                    ->json("Меню не найдено, кэш не очищен");
+            }
+            return response()
+                ->json("Порядок сохранене");
+        }
+        else {
+            return response()
+                ->json("Ошибка, недостаточно данных");
+        }
+    }
+
+    private function setWeight(array $items)
+    {
+        foreach ($items as $weight => $item) {
+            if (! empty($item['children'])) {
+                $this->setWeight($item['children']);
+            }
+            $id = $item['id'];
+            DB::table("menu_items")
+                ->where("id", $id)
+                ->update(["weight" => $weight]);
+        }
     }
 }

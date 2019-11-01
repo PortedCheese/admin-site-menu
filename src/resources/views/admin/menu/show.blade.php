@@ -13,7 +13,9 @@
                 </a>
             </div>
             <div class="card-body">
-                @include('admin-site-menu::admin.item.table')
+                <admin-menu-list :structure="{{ json_encode($structure) }}"
+                                 :update-url="'{{ route("admin.vue.menu.order") }}'">
+                </admin-menu-list>
             </div>
         </div>
     </div>
