@@ -18,7 +18,7 @@
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
-                    <div class="btn-group btn-group-sm" v-if="! changeable.parent_id">
+                    <div class="btn-group btn-group-sm" v-if="! changeable.parent_id && ! changeable.method">
                         <button v-if="changeable.children.length"
                                 data-toggle="collapse"
                                 :data-target="'#collapse-' + changeable.id"
@@ -47,7 +47,7 @@
             </div>
         </div>
         <div class="w-100 d-none d-md-block"></div>
-        <div class="list-group mt-3 collapse" :id="'collapse-' + changeable.id" v-if="changeable.children.length">
+        <div class="list-group mt-3 collapse" :id="'collapse-' + changeable.id" v-if="changeable.children.length && ! changeable.method">
             <draggable :list="changeable.children"
                        :group="'item-group' + changeable.id"
                        @change="checkMove"
