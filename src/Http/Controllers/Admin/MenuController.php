@@ -247,7 +247,7 @@ class MenuController extends Controller
                     ->json("Меню не найдено, кэш не очищен");
             }
             return response()
-                ->json("Порядок сохранене");
+                ->json("Порядок сохранен");
         }
         else {
             return response()
