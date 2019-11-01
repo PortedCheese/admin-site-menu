@@ -232,6 +232,12 @@ class MenuController extends Controller
         ];
     }
 
+    /**
+     * Применить порядок.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function changeItemsWeight(Request $request)
     {
         if (! empty($request->get("items"))) {
@@ -255,6 +261,11 @@ class MenuController extends Controller
         }
     }
 
+    /**
+     * Установить вес.
+     *
+     * @param array $items
+     */
     private function setWeight(array $items)
     {
         foreach ($items as $weight => $item) {

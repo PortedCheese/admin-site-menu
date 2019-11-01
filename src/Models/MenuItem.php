@@ -44,14 +44,16 @@ class MenuItem extends Model
         });
 
         static::creating(function (\App\MenuItem $model) {
-            $query = \App\MenuItem::query()
-                ->select("weight");
-            if (! empty($model->parent_id)) {
-                $query->where("parent_id", $model->parent_id);
+            if (empty($model->weight)) {
+                $query = \App\MenuItem::query()
+                    ->select("weight");
+                if (! empty($model->parent_id)) {
+                    $query->where("parent_id", $model->parent_id);
+                }
+                $max = $query->where("menu_id", $model->menu_id)
+                    ->max("weight");
+                $model->weight = $max + 1;
             }
-            $max = $query->where("menu_id", $model->menu_id)
-                ->max("weight");
-            $model->weight = $max + 1;
         });
 
         static::created(function (\App\MenuItem $item) {
