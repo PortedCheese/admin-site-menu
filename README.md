@@ -12,13 +12,13 @@
 
 Выгружается компонент для изменения веса меню
 
-    `php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider" --tag=public --force`
+    php artisan vendor:publish --provider="PortedCheese\AdminSiteMenu\AdminSiteMenuServiceProvider" --tag=public --force
 
 Создать шаблоны в layouts и модели.
 
-    `php artisan make:menu-settings
+    php artisan make:menu-settings
         {--all : Run full command}
         {--models : Create models}
         {--controllers : Create controllers}
         {--vue : Add vue to file} 
-        {--replace-old : Пересобрать старое меню}`
+        {--replace-old : Пересобрать старое меню}
