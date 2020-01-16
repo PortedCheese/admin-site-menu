@@ -23,9 +23,11 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="base-tab" data-toggle="tab" href="#base" role="tab" aria-selected="true">Основные</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-selected="false">Extra</a>
-                        </li>
+                        @can("settings-management")
+                            <li class="nav-item">
+                                <a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-selected="false">Extra</a>
+                            </li>
+                        @endcan
                         <li class="nav-item">
                             <a class="nav-link" id="style-tab" data-toggle="tab" href="#style" role="tab" aria-selected="false">Стили</a>
                         </li>
@@ -79,51 +81,53 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
-                            <div class="form-group">
-                                <label for="template">Шаблон</label>
-                                <input type="text"
-                                       id="template"
-                                       name="template"
-                                       value="{{ old('template') }}"
-                                       class="form-control">
-                                <small class="form-text text-muted">Шаблон, в котором задано меню</small>
-                            </div>
+                        @can("settings-management")
+                            <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
+                                <div class="form-group">
+                                    <label for="template">Шаблон</label>
+                                    <input type="text"
+                                           id="template"
+                                           name="template"
+                                           value="{{ old('template') }}"
+                                           class="form-control">
+                                    <small class="form-text text-muted">Шаблон, в котором задано меню</small>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="method">Метод</label>
-                                <input type="text"
-                                       id="method"
-                                       name="method"
-                                       value="{{ old('method') }}"
-                                       class="form-control">
-                                <small class="form-text text-muted">Если в классе указан метод для формирования меню</small>
-                            </div>
+                                <div class="form-group">
+                                    <label for="method">Метод</label>
+                                    <input type="text"
+                                           id="method"
+                                           name="method"
+                                           value="{{ old('method') }}"
+                                           class="form-control">
+                                    <small class="form-text text-muted">Если в классе указан метод для формирования меню</small>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="middleware">Роли</label>
-                                <input type="text"
-                                       id="middleware"
-                                       name="middleware"
-                                       value="{{ old('middleware') }}"
-                                       class="form-control">
-                                <small class="form-text text-muted">Указать роли, для которых нужно показывать меню, если пусто то нет проверки на роли</small>
-                            </div>
+                                <div class="form-group">
+                                    <label for="middleware">Роли</label>
+                                    <input type="text"
+                                           id="middleware"
+                                           name="middleware"
+                                           value="{{ old('middleware') }}"
+                                           class="form-control">
+                                    <small class="form-text text-muted">Указать роли, для которых нужно показывать меню, если пусто то нет проверки на роли</small>
+                                </div>
 
-                            <div class="form-group">
-                                <label for="active_state">Active state</label>
-                                <textarea type="text"
-                                          id="active_state"
-                                          name="active_state"
-                                          class="form-control @error("active_state") is-invalid @enderror">{{ old("active_state") }}</textarea>
-                                @error("active_state")
-                                    <div class="invalid-feedback" role="alert">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                                <small class="form-text text-muted">Если нужно подсветить элемент меню на страницах, route которых отличается, нужно указать список этих путей через "|"</small>
+                                <div class="form-group">
+                                    <label for="active_state">Active state</label>
+                                    <textarea type="text"
+                                              id="active_state"
+                                              name="active_state"
+                                              class="form-control @error("active_state") is-invalid @enderror">{{ old("active_state") }}</textarea>
+                                    @error("active_state")
+                                        <div class="invalid-feedback" role="alert">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                    <small class="form-text text-muted">Если нужно подсветить элемент меню на страницах, route которых отличается, нужно указать список этих путей через "|"</small>
+                                </div>
                             </div>
-                        </div>
+                        @endcan
 
                         <div class="tab-pane fade" id="style" role="tabpanel" aria-labelledby="style-tab">
                             <div class="form-group">

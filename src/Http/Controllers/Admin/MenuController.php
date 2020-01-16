@@ -6,6 +6,7 @@ use App\Menu;
 use App\MenuItem;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
 use PortedCheese\AdminSiteMenu\Http\Requests\MenuStoreRequest;
@@ -17,6 +18,12 @@ use Symfony\Component\Yaml\Yaml;
 class MenuController extends Controller
 {
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->authorizeResource(Menu::class, "menu");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,15 +31,28 @@ class MenuController extends Controller
      */
     public function index()
     {
+        $noKeys = [];
+        if (! Gate::allows("editAdmin", Menu::class)) {
+            $noKeys[] = "admin";
+        }
+        $menus = Menu::query()
+            ->whereNotIn("key", $noKeys)
+            ->orderBy("title")
+            ->get();
         return view('admin-site-menu::admin.menu.index', [
-            'menus' => Menu::query()->orderBy("title")->get(),
+            'menus' => $menus,
         ]);
     }
 
+    /**
+     * Просмотр меню.
+     *
+     * @param Menu $menu
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function show(Menu $menu)
     {
         $menuStructure = Menu::getByKey($menu->key);
-        debugbar()->info($menuStructure);
         return view("admin-site-menu::admin.menu.show", [
             'menu' => $menu,
             'structure' => $menuStructure,
@@ -79,9 +99,11 @@ class MenuController extends Controller
      * @param Menu $menu
      * @param MenuItem|NULL $item
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function createItem(Menu $menu, MenuItem $item = NULL)
     {
+        $this->authorize("createItem", $menu);
         return view('admin-site-menu::admin.item.create', [
             'menu' => $menu,
             'parent' => !empty($item) ? $item->id : $item,
@@ -94,9 +116,12 @@ class MenuController extends Controller
      * @param MenuItemStoreRequest $request
      * @param Menu $menu
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function storeItem(MenuItemStoreRequest $request, Menu $menu)
     {
+        $this->authorize("createItem", $menu);
+
         $userInput = $request->all();
         if (! empty($userInput['active_state'])) {
             $userInput['active'] = explode("|", $userInput['active_state']);
@@ -117,6 +142,7 @@ class MenuController extends Controller
     public function destroyItem(MenuItem $menuItem)
     {
         $menu = $menuItem->menu;
+        $this->authorize("deleteItem", $menu);
         $menuItem->delete();
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
@@ -128,12 +154,15 @@ class MenuController extends Controller
      *
      * @param MenuItem $menuItem
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function editItem(MenuItem $menuItem)
     {
+        $menu = $menuItem->menu;
+        $this->authorize("editItem", $menu);
         return view('admin-site-menu::admin.item.edit', [
             'menuItem' => $menuItem,
-            'menu' => $menuItem->menu,
+            'menu' => $menu,
         ]);
     }
 
@@ -143,10 +172,12 @@ class MenuController extends Controller
      * @param MenuItemUpdateRequest $request
      * @param MenuItem $menuItem
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function updateItem(MenuItemUpdateRequest $request, MenuItem $menuItem)
     {
         $menu = $menuItem->menu;
+        $this->authorize("editItem", $menu);
         $userInput = $request->all();
         if (! empty($userInput['active_state'])) {
             $userInput['active'] = explode("|", $userInput['active_state']);
@@ -165,9 +196,11 @@ class MenuController extends Controller
      * Выгрузить струтктуру меню.
      *
      * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function export()
     {
+        $this->authorize("settings-management");
         $data = Menu::getExport();
         $yaml = Yaml::dump($data);
         $response = response($yaml, 200, [
@@ -182,10 +215,12 @@ class MenuController extends Controller
      *
      * @param YamlLoadRequest $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function import(YamlLoadRequest $request)
     {
+        $this->authorize("settings-management");
         if ($request->hasFile('file')) {
             $content = $request
                 ->file('file')

@@ -21,9 +21,11 @@
                         <li class="nav-item">
                             <a class="nav-link active" id="base-tab" data-toggle="tab" href="#base" role="tab" aria-selected="true">Основные</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-selected="false">Extra</a>
-                        </li>
+                        @can("settings-management")
+                            <li class="nav-item">
+                                <a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-selected="false">Extra</a>
+                            </li>
+                        @endcan
                         <li class="nav-item">
                             <a class="nav-link" id="style-tab" data-toggle="tab" href="#style" role="tab" aria-selected="false">Стили</a>
                         </li>
@@ -87,7 +89,8 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
+                        @can("settings-management")
+                            <div class="tab-pane fade" id="extra" role="tabpanel" aria-labelledby="extra-tab">
                             <div class="form-group">
                                 <label for="template">Шаблон</label>
                                 <input type="text"
@@ -147,6 +150,7 @@
                                 <small class="form-text text-muted">Если нужно подсветить элемент меню на страницах, route которых отличается, нужно указать список этих путей через "|"</small>
                             </div>
                         </div>
+                        @endcan
 
                         <div class="tab-pane fade" id="style" role="tabpanel" aria-labelledby="style-tab">
                             <div class="form-group">

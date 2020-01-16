@@ -4,19 +4,23 @@
 @section('header-title', 'Список меню сайта')
 
 @section('admin')
-    @role('admin')
+    @can('settings-management')
         <div class="col-12">
             <div class="card">
                 <div class="card-body row">
                     @include('admin-site-menu::admin.includes.export-btn')
-                    @include('admin-site-menu::admin.includes.create-form')
                 </div>
             </div>
         </div>
-    @endrole
+    @endcan
 
     <div class="col-12">
         <div class="card">
+            @can("create", \App\Menu::class)
+                <div class="card-header">
+                    @include('admin-site-menu::admin.includes.create-form')
+                </div>
+            @endcan
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table">
@@ -40,16 +44,16 @@
                                                 'count' => false
                                             ])
                                             @if (! in_array($menu->key, ['main', 'admin']))
-                                                @role('admin')
+                                                @can('settings-management')
                                                     <button type="button" class="btn btn-danger" data-confirm="{{ "delete-form-{$menu->id}" }}">
                                                         <i class="fas fa-trash-alt"></i>
                                                     </button>
-                                                @endrole
+                                                @endcan
                                             @endif
                                         </div>
                                     </div>
                                     @if (! in_array($menu->key, ['main', 'admin']))
-                                        @role('admin')
+                                        @can('settings-management')
                                             <confirm-form :id="'{{ "delete-form-{$menu->id}" }}'">
                                                 <template>
                                                     <form action="{{ route('admin.menus.destroy', ['menu' => $menu]) }}"
@@ -61,7 +65,7 @@
                                                     </form>
                                                 </template>
                                             </confirm-form>
-                                        @endrole
+                                        @endcan
                                     @endif
                                 </td>
                             </tr>

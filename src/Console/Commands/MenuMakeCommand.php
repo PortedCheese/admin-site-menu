@@ -19,6 +19,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
                     {--all : Run full command}
                     {--models : Create models}
                     {--controllers : Create controllers}
+                    {--policies : Export and create rules}
                     {--vue : Add vue to file}
                     {--replace-old : Refactor old menu items}';
 
@@ -60,6 +61,14 @@ class MenuMakeCommand extends BaseConfigModelCommand
 
     protected $vueFolder = "admin-site-menu";
 
+    protected $ruleRules = [
+        [
+            "title" => "Меню сайта",
+            "slug" => "menu",
+            "policy" => "MenuPolicy",
+        ],
+    ];
+
     /**
      * Create a new command instance.
      *
@@ -72,8 +81,6 @@ class MenuMakeCommand extends BaseConfigModelCommand
 
     /**
      * Execute the console command.
-     *
-     * @return mixed
      */
     public function handle()
     {
@@ -96,6 +103,10 @@ class MenuMakeCommand extends BaseConfigModelCommand
             if ($this->option("vue") || $all) {
                 $this->makeVueIncludes('admin');
             }
+
+            if ($this->option("policies") || $all) {
+                $this->makeRules();
+            }
         }
     }
 
@@ -110,7 +121,9 @@ class MenuMakeCommand extends BaseConfigModelCommand
         }
 
         try {
-            Menu::where('key', 'main')->firstOrFail();
+            Menu::query()
+                ->where('key', 'main')
+                ->firstOrFail();
         }
         catch (\Exception $e) {
             $menu = Menu::create([
@@ -125,7 +138,9 @@ class MenuMakeCommand extends BaseConfigModelCommand
         }
 
         try {
-            Menu::where('key', 'admin')->firstOrFail();
+            Menu::query()
+                ->where('key', 'admin')
+                ->firstOrFail();
         }
         catch (\Exception $e) {
             $menu = Menu::create([
@@ -133,7 +148,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
                 'key' => 'admin',
             ]);
             MenuItem::create([
-                'title' => 'Меню сайта',
+                'title' => 'Меню',
                 'menu_id' => $menu->id,
                 'route' => 'admin.menus.index',
             ]);

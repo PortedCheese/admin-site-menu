@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => "admin",
     'as' => 'admin.',
-    'middleware' => ['web', 'role:admin|editor'],
+    'middleware' => ['web', 'management'],
     'namespace' => 'App\Http\Controllers\Vendor\AdminSiteMenu\Admin'
 ], function () {
 
@@ -14,11 +14,15 @@ Route::group([
         'edit'
     ]);
 
-    // Получить файл структы меню.
-    Route::post('/menus/export', 'MenuController@export')
-        ->name('menus.export');
-    Route::post('/menus/import', 'MenuController@import')
-        ->name('menus.import');
+    Route::group([
+        "middleware" => ["super"],
+    ], function () {
+        // Получить файл структы меню.
+        Route::post('/menus/export', 'MenuController@export')
+            ->name('menus.export');
+        Route::post('/menus/import', 'MenuController@import')
+            ->name('menus.import');
+    });
 
     // Роуты для элементов меню.
     Route::prefix('menus/items')->group(function () {
