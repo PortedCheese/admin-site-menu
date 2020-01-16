@@ -25,6 +25,7 @@ class MenuItem extends JsonResource
             'url' => ! empty($this->url) ? $this->url : false,
             'class' => ! empty($this->class) ? $this->class : "",
             'middleware' => ! empty($this->middleware) ? $this->middleware : false,
+            'gate' => ! empty($this->gate) ? $this->gate : false,
             'target' => ! empty($this->target) ? $this->target : false,
             'method' => ! empty($this->method) ? $this->method : false,
             'template' => ! empty($this->template) ? $this->template : false,

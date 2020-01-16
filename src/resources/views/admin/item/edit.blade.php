@@ -137,6 +137,21 @@
                             </div>
 
                             <div class="form-group">
+                                <label for="gate">Gate</label>
+                                <input type="text"
+                                       id="gate"
+                                       name="gate"
+                                       value="{{ old("gate", $menuItem->gate) }}"
+                                       class="form-control @error("gate") is-invalid @enderror">
+                                @error("gate")
+                                    <div class="invalid-feedback" role="alert">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                                <small class="form-text text-muted">Название Gate, <span class="text-danger">Gate приоритетнее Ролей</span></small>
+                            </div>
+
+                            <div class="form-group">
                                 <label for="active_state">Active state</label>
                                 <textarea type="text"
                                        id="active_state"

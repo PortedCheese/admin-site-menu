@@ -3,10 +3,12 @@
 namespace PortedCheese\AdminSiteMenu;
 
 use App\Menu;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use PortedCheese\AdminSiteMenu\Console\Commands\MenuMakeCommand;
 use PortedCheese\AdminSiteMenu\Http\Helpers\MenuActive;
+use PortedCheese\AdminSiteMenu\Http\Middleware\ManagementMenu;
 
 class AdminSiteMenuServiceProvider extends ServiceProvider
 {
@@ -32,6 +34,9 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
                 MenuMakeCommand::class,
             ]);
         }
+
+        // Gates.
+        Gate::define("menu-management", "App\Policies\MenuPolicy@viewAny");
 
         view()->composer('admin-site-menu::admin.includes.routes-modal', function ($view) {
             $routes = Route::getRoutes();

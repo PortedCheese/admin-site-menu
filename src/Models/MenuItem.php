@@ -27,6 +27,7 @@ class MenuItem extends Model
         'ico',
         'active',
         'single',
+        "gate",
     ];
 
     protected $casts = [

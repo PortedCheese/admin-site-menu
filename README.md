@@ -22,3 +22,14 @@
         {--controllers : Create controllers}
         {--vue : Add vue to file} 
         {--replace-old : Пересобрать старое меню}
+
+### Versions
+
+    v1.3.2:
+        - Добавлены права доступа на администрирование меню
+        - Новое поле в таблице gate
+    Обновление:
+        - php artisan make:menu-settings --policies
+        - php artisan migrate
+        - php artisan cache:clear
+        - Добавить menu-management в Меню
