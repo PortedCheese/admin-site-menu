@@ -20,6 +20,7 @@
         {--all : Run full command}
         {--models : Create models}
         {--controllers : Create controllers}
+        {--policies : Export and create rules}
         {--vue : Add vue to file} 
         {--replace-old : Пересобрать старое меню}
 
