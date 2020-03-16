@@ -20,6 +20,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
                     {--models : Create models}
                     {--controllers : Create controllers}
                     {--policies : Export and create rules}
+                    {--only-default : Create default rules}
                     {--vue : Add vue to file}
                     {--replace-old : Refactor old menu items}';
 

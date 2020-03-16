@@ -187,7 +187,7 @@ class MenuItem extends Model
     public function getUrl()
     {
         if (!empty($this->route) && Route::has($this->route)) {
-            $url = route($this->route);
+            $url = "route";
         }
         elseif (!empty($this->url)) {
             $url = $this->url;
