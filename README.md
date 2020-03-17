@@ -17,12 +17,13 @@
 Создать шаблоны в layouts и модели.
 
     php artisan make:menu-settings
-        {--all : Run full command}
-        {--models : Create models}
-        {--controllers : Create controllers}
-        {--policies : Export and create rules}
-        {--vue : Add vue to file} 
-        {--replace-old : Пересобрать старое меню}
+                            {--all : Run full command}
+                            {--models : Create models}
+                            {--controllers : Create controllers}
+                            {--policies : Export and create rules}
+                            {--only-default : Create default rules}
+                            {--vue : Add vue to file}
+                            {--replace-old : Refactor old menu items}
 
 ### Versions
 
