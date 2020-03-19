@@ -7,9 +7,7 @@ use App\MenuItem;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
-use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
-use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
-use PortedCheese\AdminSiteMenu\Http\Requests\MenuStoreRequest;
+use Illuminate\Support\Facades\Validator;
 use PortedCheese\AdminSiteMenu\Http\Requests\YamlLoadRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -62,15 +60,32 @@ class MenuController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param MenuStoreRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(MenuStoreRequest $request)
+    public function store(Request $request)
     {
+        $this->storeValidator($request->all());
         $menu = Menu::create($request->all());
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Новое меню добавлено');
+    }
+
+    /**
+     * Валидация сохранения меню.
+     *
+     * @param $data
+     */
+    protected function storeValidator($data)
+    {
+        Validator::make($data, [
+            "title" => ["required", "max:100", "unique:menus,title"],
+            "key" => ["required", "max:100", "unique:menus,key"],
+        ], [], [
+            "title" => "Название",
+            "key" => "Ключ",
+        ])->validate();
     }
 
     /**
@@ -113,14 +128,15 @@ class MenuController extends Controller
     /**
      * Добавление пункта меню.
      *
-     * @param MenuItemStoreRequest $request
+     * @param Request $request
      * @param Menu $menu
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function storeItem(MenuItemStoreRequest $request, Menu $menu)
+    public function storeItem(Request $request, Menu $menu)
     {
         $this->authorize("createItem", $menu);
+        $this->storeItemValidator($request->all());
 
         $userInput = $request->all();
         if (! empty($userInput['active_state'])) {
@@ -131,6 +147,17 @@ class MenuController extends Controller
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Пункт меню добавлен');
+    }
+
+    protected function storeItemValidator($data)
+    {
+        Validator::make($data, [
+            "menu_id" => ["required", "exists:menus,id"],
+            "title" => ["required", "max:100"],
+        ], [], [
+            "menu_id" => "Меню",
+            "title" => "Заголовок",
+        ])->validate();
     }
 
     /**
@@ -169,15 +196,17 @@ class MenuController extends Controller
     /**
      * Обновление пункта меню.
      *
-     * @param MenuItemUpdateRequest $request
+     * @param Request $request
      * @param MenuItem $menuItem
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function updateItem(MenuItemUpdateRequest $request, MenuItem $menuItem)
+    public function updateItem(Request $request, MenuItem $menuItem)
     {
         $menu = $menuItem->menu;
         $this->authorize("editItem", $menu);
+        $this->updateItemValidator($request->all(), $menuItem);
+
         $userInput = $request->all();
         if (! empty($userInput['active_state'])) {
             $userInput['active'] = explode("|", $userInput['active_state']);
@@ -190,6 +219,21 @@ class MenuController extends Controller
         return redirect()
             ->route('admin.menus.show', ['menu' => $menu])
             ->with('success', 'Успешно обновлено');
+    }
+
+    /**
+     * Валидация обновления.
+     *
+     * @param $data
+     * @param MenuItem $menuItem
+     */
+    protected function updateItemValidator($data, MenuItem $menuItem)
+    {
+        Validator::make($data, [
+            "title" => ["required", "max:100"],
+        ], [], [
+            "title" => "Заголовок",
+        ])->validate();
     }
 
     /**
@@ -213,14 +257,16 @@ class MenuController extends Controller
     /**
      * Загрузка структуры.
      *
-     * @param YamlLoadRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Illuminate\Auth\Access\AuthorizationException
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function import(YamlLoadRequest $request)
+    public function import(Request $request)
     {
         $this->authorize("settings-management");
+        $this->importValidator($request->all());
+
         if ($request->hasFile('file')) {
             $content = $request
                 ->file('file')
@@ -238,6 +284,15 @@ class MenuController extends Controller
                 ->route('admin.menus.index')
                 ->with('danger', 'Файл не найден');
         }
+    }
+
+    protected function importValidator($data)
+    {
+        Validator::make($data, [
+            "file" => ["required", "file", "mimes:yaml,yml,txt"],
+        ], [], [
+            "file" => "Файл",
+        ])->validate();
     }
 
     /**

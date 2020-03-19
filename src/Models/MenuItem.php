@@ -5,8 +5,6 @@ namespace PortedCheese\AdminSiteMenu\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
-use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemStoreRequest;
-use PortedCheese\AdminSiteMenu\Http\Requests\MenuItemUpdateRequest;
 use PortedCheese\AdminSiteMenu\Http\Resources\MenuItem as MenuItemResource;
 use App\Menu;
 
@@ -136,58 +134,14 @@ class MenuItem extends Model
     }
 
     /**
-     * Валидация создания пункта меню.
-     *
-     * @param MenuItemStoreRequest $validator
-     * @param bool $attr
-     * @return array
-     */
-    public static function requestMenuItemStore(MenuItemStoreRequest $validator, $attr = false)
-    {
-        if ($attr) {
-            return [
-                "menu_id" => "Меню",
-                "title" => "Заголовок",
-            ];
-        }
-        else {
-            return [
-                'menu_id' => "required|exists:menus,id",
-                'title' => "required|min:2",
-            ];
-        }
-    }
-
-    /**
-     * Валидация обновления пункта меню.
-     *
-     * @param MenuItemUpdateRequest $validator
-     * @param bool $attr
-     * @return array
-     */
-    public static function requestMenuItemUpdate(MenuItemUpdateRequest $validator, $attr = false)
-    {
-        if ($attr) {
-            return [
-                "title" => "Заголовок",
-            ];
-        }
-        else {
-            return [
-                'title' => "required|min:2",
-            ];
-        }
-    }
-
-    /**
      * Получаем адрес ссылки.
      *
      * @return mixed|string
      */
     public function getUrl()
     {
-        if (!empty($this->route) && Route::has($this->route)) {
-            $url = "route";
+        if ($this->checkRoute()) {
+            $url = route($this->route);
         }
         elseif (!empty($this->url)) {
             $url = $this->url;
@@ -196,6 +150,21 @@ class MenuItem extends Model
             $url = false;
         }
         return $url;
+    }
+
+    /**
+     * Проверить путь.
+     *
+     * @return bool|mixed
+     */
+    public function checkRoute()
+    {
+        if (! empty($this->route) && Route::has($this->route)) {
+            return $this->route;
+        }
+        else {
+            return false;
+        }
     }
 
     /**
@@ -236,7 +205,7 @@ class MenuItem extends Model
         $data = $this->toArray();
         if ($this->children->count()) {
             $info = [];
-            foreach ($this->children as $child) {
+            foreach ($this->children()->orderBy("weight")->get() as $child) {
                 $info[] = $child->prepareForExport();
             }
             $data['children'] = $info;
@@ -252,11 +221,12 @@ class MenuItem extends Model
     private function fillChildren()
     {
         $childrenData = [];
-        foreach ($this->children->sortBy('weight') as $child) {
+        foreach ($this->children()->orderBy('weight')->get() as $child) {
             $info = new MenuItemResource($child);
             $info['children'] = false;
             $info['ico'] = false;
             $info['url'] = $child->getUrl();
+            $info["route"] = $child->checkRoute();
             $childrenData[] = (object) $info;
         }
         return $childrenData;
