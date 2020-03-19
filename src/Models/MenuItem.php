@@ -254,6 +254,8 @@ class MenuItem extends Model
                 $item['id'] = empty($item['id']) ? "{$this->id}-$key" : $item['id'];
                 $item['class'] = empty($item['class']) ? "" : $item['class'];
                 $item['target'] = empty($item['target']) ? "" : $item['target'];
+                // TODO: подумать как можно передать параметры для роута.
+                $item["route"] = false;
                 $children[] = (object) $item;
             }
         }
