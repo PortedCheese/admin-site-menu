@@ -9,7 +9,7 @@
    aria-haspopup="true"
    aria-expanded="false"
    @endif
-   href="{{ $item->route ? route($item->route) : $item->url ? $item->url : "#"}}">
+   href="{{ $item->route ? route($item->route) : ($item->url ? $item->url : "#")}}">
     @if ($item->ico)
         <i class="{{ $item->ico }}"></i>
     @endif

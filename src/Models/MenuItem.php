@@ -222,11 +222,8 @@ class MenuItem extends Model
     {
         $childrenData = [];
         foreach ($this->children()->orderBy('weight')->get() as $child) {
-            $info = new MenuItemResource($child);
-            $info['children'] = false;
-            $info['ico'] = false;
-            $info['url'] = $child->getUrl();
-            $info["route"] = $child->checkRoute();
+            $resource = new MenuItemResource($child);
+            $info = $resource->toArray(request());
             $childrenData[] = (object) $info;
         }
         return $childrenData;

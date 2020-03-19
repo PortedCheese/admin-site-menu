@@ -51,25 +51,24 @@ class Menu extends Model
      */
     public static function getByKey($key)
     {
-        $cached = Cache::get("menu:$key");
-        if (!empty($cached)) {
-            return $cached;
-        }
-        try {
-            $menu = self::query()
-                ->where('key', $key)
-                ->firstOrFail();
-        } catch (\Exception $e) {
-            return [];
-        }
-        $menuItems = $menu->items
-            ->where('parent_id', NULL)
-            ->sortBy('weight');
-        $output = [];
-        foreach ($menuItems as $menuItem) {
-            $output[] = $menuItem->prepareForRender();
-        }
-        Cache::forever("menu:$key", $output);
+        $cacheKey = "menu:$key";
+        $output = Cache::rememberForever($cacheKey, function () use ($key) {
+            try {
+                $menu = self::query()
+                    ->where('key', $key)
+                    ->firstOrFail();
+            } catch (\Exception $e) {
+                return [];
+            }
+            $menuItems = $menu->items
+                ->where('parent_id', NULL)
+                ->sortBy('weight');
+            $output = [];
+            foreach ($menuItems as $menuItem) {
+                $output[] = $menuItem->prepareForRender();
+            }
+            return $output;
+        });
         return $output;
     }
 
