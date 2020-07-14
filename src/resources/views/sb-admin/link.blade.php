@@ -1,4 +1,4 @@
-<a class="{{ menuactive()->getLinkClass($item, $active, $begin) }}"
+<a class="nav-link"
    @if ($item->target)
    target="{{ $item->target }}"
    @endif
@@ -12,13 +12,15 @@
     @if ($item->ico)
         <i class="{{ $item->ico }}"></i>
     @endif
-    {{ $item->title }}
+    <span>{{ $item->title }}</span>
 </a>
 @if ($item->children)
     <div id="{{ "collapse-$item->id" }}" class="collapse{{ $active ? " show" : "" }}" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             @foreach($item->children as $child)
-                @include('admin-site-menu::sb-admin.link', ['item' => $child, 'begin' => "collapse-item", 'active' => menuactive()->getActive($child)])
+                <a class="collapse-item{{ menuactive()->getActive($child) ? " active" : "" }}" href="{{ $child->route ? route($child->route) : ($child->url ? $child->url : "#")}}">
+                    {{ $child->title }}
+                </a>
             @endforeach
         </div>
     </div>
