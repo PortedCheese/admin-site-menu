@@ -19,7 +19,7 @@
         <div class="bg-white py-2 collapse-inner rounded">
             @foreach($item->children as $child)
                 <a class="collapse-item{{ menuactive()->getActive($child) ? " active" : "" }}" href="{{ $child->route ? route($child->route) : ($child->url ? $child->url : "#")}}">
-                    {{ $child->title }}
+                    <span>{{ $child->title }}</span>
                 </a>
             @endforeach
         </div>
