@@ -18,7 +18,7 @@
     <div id="{{ "collapse-$item->id" }}" class="collapse{{ $active ? " show" : "" }}" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             @foreach($item->children as $child)
-                @include('admin-site-menu::layouts.link', ['item' => $child, 'begin' => "collapse-item", 'active' => menuactive()->getActive($child)])
+                @include('admin-site-menu::sb-admin.link', ['item' => $child, 'begin' => "collapse-item", 'active' => menuactive()->getActive($child)])
             @endforeach
         </div>
     </div>

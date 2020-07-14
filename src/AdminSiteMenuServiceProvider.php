@@ -62,7 +62,7 @@ class AdminSiteMenuServiceProvider extends ServiceProvider
             $view->with('mainMenu', Menu::getByKey('main'));
         });
 
-        $adminThemes = ['layouts.admin', 'layouts.paper', 'layouts.argon'];
+        $adminThemes = ['layouts.admin', 'layouts.paper', 'layouts.argon', "layouts.sb-admin"];
         view()->composer($adminThemes, function ($view) {
             $view->with('adminMenu', Menu::getByKey('admin'));
         });
