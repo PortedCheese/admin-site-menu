@@ -5,6 +5,7 @@ namespace PortedCheese\AdminSiteMenu\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use App\MenuItem;
+use Illuminate\Support\Facades\Log;
 
 class Menu extends Model
 {
@@ -111,8 +112,8 @@ class Menu extends Model
             } catch (\Exception $e) {
                 $menu = self::create($menuData);
             }
-            // Чистим старое меню, что бы не дублировать.
-            $menu->clearItems();
+            // Чистим элементы меню которых нет.
+            $menu->clearExportUuid($menuData['items']);
             if (empty($menuData['items'])) {
                 continue;
             }
@@ -121,5 +122,35 @@ class Menu extends Model
                 MenuItem::makeImport($menuId, $menuItemData);
             }
         }
+    }
+
+    public function clearExportUuid($items)
+    {
+        $ids = $this->findUuid($items);
+        debugbar()->info($ids);
+        $menuItems = MenuItem::query()
+            ->where("menu_id", $this->id)
+            ->whereNotIn("uuid", $ids)
+            ->orWhereNull("uuid")
+            ->get();
+        debugbar()->info($menuItems);
+        foreach ($menuItems as $item) {
+            $item->delete();
+        }
+    }
+
+    public function findUuid($items)
+    {
+        $ids = [];
+        foreach ($items as $item) {
+            if (! empty($item["uuid"])) {
+                $ids[] = $item["uuid"];
+                if (! empty($item["children"])) {
+                    $sub = $this->findUuid($items["children"]);
+                    $ids = array_merge($ids, $sub);
+                }
+            }
+        }
+        return $ids;
     }
 }

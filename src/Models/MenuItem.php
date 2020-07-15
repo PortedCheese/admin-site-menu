@@ -5,6 +5,7 @@ namespace PortedCheese\AdminSiteMenu\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use PortedCheese\AdminSiteMenu\Http\Resources\MenuItem as MenuItemResource;
 use App\Menu;
 
@@ -26,6 +27,7 @@ class MenuItem extends Model
         'active',
         'single',
         "gate",
+        "uuid",
     ];
 
     protected $casts = [
@@ -53,6 +55,7 @@ class MenuItem extends Model
                     ->max("weight");
                 $model->weight = $max + 1;
             }
+            $model->uuid = Str::uuid();
         });
 
         static::created(function (\App\MenuItem $item) {
@@ -122,14 +125,40 @@ class MenuItem extends Model
     public static function makeImport($menuId, $itemData)
     {
         $itemData['menu_id'] = $menuId;
-        $menuItem = \App\MenuItem::create($itemData);
+        if (! empty($itemData["uuid"])) {
+            try {
+                $menuItem = \App\MenuItem::query()
+                    ->where("uuid", $itemData["uuid"])
+                    ->firstOrFail();
+                $menuItem->update($itemData);
+            }
+            catch (\Exception $exception) {
+                $menuItem = \App\MenuItem::create($itemData);
+            }
+        }
+        else {
+            $menuItem = \App\MenuItem::create($itemData);
+        }
         if (empty($itemData['children'])) {
             return;
         }
         foreach ($itemData['children'] as $child) {
             $child['menu_id'] = $menuId;
             $child['parent_id'] = $menuItem->id;
-            \App\MenuItem::create($child);
+            if (! empty($child["uuid"])) {
+                try {
+                    $menuItem = \App\MenuItem::query()
+                        ->where("uuid", $child["uuid"])
+                        ->firstOrFail();
+                    $menuItem->update($child);
+                }
+                catch (\Exception $exception) {
+                    $menuItem = \App\MenuItem::create($child);
+                }
+            }
+            else {
+                $menuItem = \App\MenuItem::create($child);
+            }
         }
     }
 
