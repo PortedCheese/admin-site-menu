@@ -127,13 +127,11 @@ class Menu extends Model
     public function clearExportUuid($items)
     {
         $ids = $this->findUuid($items);
-        debugbar()->info($ids);
         $menuItems = MenuItem::query()
             ->where("menu_id", $this->id)
             ->whereNotIn("uuid", $ids)
             ->orWhereNull("uuid")
             ->get();
-        debugbar()->info($menuItems);
         foreach ($menuItems as $item) {
             $item->delete();
         }
