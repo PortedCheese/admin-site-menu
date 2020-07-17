@@ -144,7 +144,7 @@ class Menu extends Model
             if (! empty($item["uuid"])) {
                 $ids[] = $item["uuid"];
                 if (! empty($item["children"])) {
-                    $sub = $this->findUuid($items["children"]);
+                    $sub = $this->findUuid($item["children"]);
                     $ids = array_merge($ids, $sub);
                 }
             }
