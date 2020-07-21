@@ -18,7 +18,7 @@
     <div id="{{ "collapse-$item->id" }}" class="collapse{{ $active ? " show" : "" }}" data-parent="#accordionSidebar">
         <div class="bg-white py-2 collapse-inner rounded">
             @foreach($item->children as $child)
-                <a class="collapse-item{{ menuactive()->getActive($child) ? " active" : "" }}" href="{{ $child->route ? route($child->route) : ($child->url ? $child->url : "#")}}">
+                <a class="collapse-item{{ $child->route && $child->route == $currentRoute ? " active" : "" }}" href="{{ $child->route ? route($child->route) : ($child->url ? $child->url : "#")}}">
                     <span>{{ $child->title }}</span>
                 </a>
             @endforeach
