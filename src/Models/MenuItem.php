@@ -147,17 +147,17 @@ class MenuItem extends Model
             $child['parent_id'] = $menuItem->id;
             if (! empty($child["uuid"])) {
                 try {
-                    $menuItem = \App\MenuItem::query()
+                    $menuChild = \App\MenuItem::query()
                         ->where("uuid", $child["uuid"])
                         ->firstOrFail();
-                    $menuItem->update($child);
+                    $menuChild->update($child);
                 }
                 catch (\Exception $exception) {
-                    $menuItem = \App\MenuItem::create($child);
+                    $menuChild = \App\MenuItem::create($child);
                 }
             }
             else {
-                $menuItem = \App\MenuItem::create($child);
+                $menuChild = \App\MenuItem::create($child);
             }
         }
     }
