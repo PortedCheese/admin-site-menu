@@ -31,6 +31,7 @@ class MenuMakeCommand extends BaseConfigModelCommand
      */
     protected $description = 'Scaffold menu models';
 
+    protected $vendorName = "PortedCheese";
     protected $packageName = "AdminSiteMenu";
 
     /**

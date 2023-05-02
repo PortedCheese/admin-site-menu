@@ -27,6 +27,9 @@
 
 ### Versions
 
+    v1.6.1: fix VendorName
+    v1.6.0: base-settings 3.0
+    v1.5.0: base-settings 2.0
     v1.4.0:
         - Добавлен uuid
         - Измененм экспорт
