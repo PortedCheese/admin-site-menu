@@ -3,8 +3,8 @@
    target="{{ $item->target }}"
    @endif
    @if ($item->children)
-   data-toggle="collapse"
-   data-target="#collapse-{{ $item->id }}"
+   data-bs-toggle="collapse"
+   data-bs-toggle="#collapse-{{ $item->id }}"
    aria-controls="#collapse-{{ $item->id }}"
    aria-expanded="{{ $active ? "true" : "false" }}"
    @endif

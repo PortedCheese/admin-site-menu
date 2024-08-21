@@ -1,6 +1,6 @@
 @if ($count)
     <a href="#collapse-list-{{ $menuId }}"
-       data-toggle="collapse"
+       data-bs-toggle="collapse"
        role="button"
        class="btn btn-secondary">
         <i class="fas fa-stream"></i>

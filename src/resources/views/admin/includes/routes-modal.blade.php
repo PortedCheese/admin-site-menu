@@ -1,7 +1,7 @@
 <button type="button"
         class="btn btn-primary btn-sm mt-2"
-        data-toggle="modal"
-        data-target="#routesModal">
+        data-bs-toggle="modal"
+        data-bs-target="#routesModal">
     Список путей
 </button>
 
@@ -29,7 +29,7 @@
                 </ul>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

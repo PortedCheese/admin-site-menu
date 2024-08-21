@@ -19,15 +19,15 @@
 
                     <ul class="nav nav-tabs mb-3" id="menuItemTab" role="tablist">
                         <li class="nav-item">
-                            <a class="nav-link active" id="base-tab" data-toggle="tab" href="#base" role="tab" aria-selected="true">Основные</a>
+                            <button class="nav-link active" id="base-tab" data-bs-toggle="tab" data-bs-target="#base" type="button" role="tab" aria-selected="true">Основные</button>
                         </li>
                         @can("settings-management")
                             <li class="nav-item">
-                                <a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-selected="false">Extra</a>
+                                <button class="nav-link" id="extra-tab" data-bs-toggle="tab" data-bs-target="#extra" type="button" role="tab" aria-selected="false">Extra</button>
                             </li>
                         @endcan
                         <li class="nav-item">
-                            <a class="nav-link" id="style-tab" data-toggle="tab" href="#style" role="tab" aria-selected="false">Стили</a>
+                            <button class="nav-link" id="style-tab" data-bs-toggle="tab" data-bs-target="#style" type="button" role="tab" aria-selected="false">Стили</button>
                         </li>
                     </ul>
 

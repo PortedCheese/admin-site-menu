@@ -31,7 +31,7 @@
                            lang="ru"
                            name="file"
                            aria-describedby="inputGroupAvatar">
-                    <label class="custom-file-label"
+                    <label class="custom-file-label d-none"
                            for="custom-file-input">
                         Выберите файл
                     </label>

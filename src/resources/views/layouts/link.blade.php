@@ -5,7 +5,7 @@
    @if ($item->children)
    id="item-drop-{{ $item->id }}"
    role="button"
-   data-toggle="dropdown"
+   data-bs-toggle="dropdown"
    aria-haspopup="true"
    aria-expanded="false"
    @endif
