@@ -20,8 +20,8 @@
                     </div>
                     <div class="btn-group btn-group-sm" v-if="! changeable.parent_id && ! changeable.method">
                         <button v-if="changeable.children.length"
-                                data-toggle="collapse"
-                                :data-target="'#collapse-' + changeable.id"
+                                data-bs-toggle="collapse"
+                                :data-bs-target="'#collapse-' + changeable.id"
                                 role="button"
                                 class="btn btn-secondary">
                             <i class="fas fa-stream"></i>
