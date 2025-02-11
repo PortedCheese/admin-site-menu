@@ -171,8 +171,7 @@ class MenuController extends Controller
         $menu = $menuItem->menu;
         $this->authorize("deleteItem", $menu);
         $menuItem->delete();
-        return redirect()
-            ->route('admin.menus.show', ['menu' => $menu])
+        return redirect()->back()
             ->with('success', 'Пункт меню удален');
     }
 
