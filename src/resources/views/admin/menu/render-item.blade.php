@@ -36,7 +36,7 @@
                 <div class="btn-group btn-group-sm">
                     @if ($menuItem->children->count())
                         <a href="#collapse-menu-item-list-{{ $menuItem->id }}"
-                           data-toggle="collapse"
+                           data-bs-toggle="collapse"
                            role="button"
                            class="btn btn-secondary">
                             <i class="fas fa-stream"></i>
